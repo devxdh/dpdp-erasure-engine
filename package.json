@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/js-yaml": "^4.0.9",
+    "@types/pino": "^7.0.5",
     "vitest": "^4.1.5"
   },
   "peerDependencies": {
@@ -19,6 +20,7 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.1",
+    "pino": "^10.3.1",
     "postgres": "^3.4.9",
     "zod": "^4.4.2"
   }

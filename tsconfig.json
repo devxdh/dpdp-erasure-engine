@@ -19,14 +19,11 @@
       "@modules/*": [
         "./src/modules/*"
       ],
-      "@utils/*": [
-        "./src/utils*"
-      ],
       "@errors/*": [
-        "./src/errors*"
+        "./src/errors/*"
       ],
       "@types/*": [
-        "./src/types*"
+        "./src/types/*"
       ]
     },
     // Bundler mode
