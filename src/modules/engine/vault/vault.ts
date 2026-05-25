@@ -1,7 +1,13 @@
 import type { Sql } from "@/types";
-import type { VaultUserOptions, VaultUserResult, WorkerSecrets } from "../types";
 import { fail } from "@/errors";
-import { assertWorkerSecrets, createUserHash, resolveNoticeWindowHours, resolveRetentionYears, resolveSchemas } from "../helpers";
+import {
+  assertWorkerSecrets,
+  createUserHash,
+  resolveNoticeWindowHours,
+  resolveRetentionYears,
+  resolveSchemas
+} from "../helpers";
+import type { VaultUserOptions, VaultUserResult, WorkerSecrets } from "../types";
 import { resolveRootContext } from "./context";
 import { runVaultDryRun } from "./dry-run";
 import { runVaultMutation } from "./execution";

@@ -1,4 +1,4 @@
-import type { RetentionRule } from "@/modules/config";
+import type { RetentionRule } from "@modules/config";
 import type { SqlExecutor, Tsql } from "@/types";
 import { assertIdentifier } from "@/utils";
 import { resolveRetentionYears } from "../helpers";

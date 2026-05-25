@@ -1,8 +1,8 @@
 import { asWorkerError, workerError } from "@/errors";
-import type { ApiClient, SyncTaskResponse, TaskAckPayload } from "@/modules/worker";
+import { getLogger } from "@/utils";
+import type { ApiClient, SyncTaskResponse, TaskAckPayload } from "@modules/worker";
 import { computeRequestSignature } from "../request-signing";
 import { syncResponseSchema } from "./validation";
-import { getLogger } from "@/utils";
 
 const logger = getLogger({ component: "control-plane" });
 

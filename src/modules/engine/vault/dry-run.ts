@@ -1,7 +1,7 @@
 import type { Sql } from "@/types";
-import { buildVaultDryRunPlan, type RootMutationContext } from "./context";
-import type { CompiledExecutionTargetInput } from "@/modules/config";
+import type { CompiledExecutionTargetInput } from "@modules/config";
 import type { VaultUserResult } from "../types";
+import { buildVaultDryRunPlan, type RootMutationContext } from "./context";
 import { resolveStaticExecutionPlan } from "./static-plan";
 import { resolveRetentionWindow } from "./retention";
 import { getVaultRecordByUserId } from "./store";

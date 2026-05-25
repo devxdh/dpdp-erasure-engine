@@ -1,7 +1,7 @@
 import { outboxLogger } from "@/utils";
-import type { FetchDispatcherOptions, OutboxEvent } from "./types";
 import { fail, workerError } from "@/errors";
 import { computeRequestSignature } from "../request-signing";
+import type { FetchDispatcherOptions, OutboxEvent } from "./types";
 
 interface ControlPlaneOutboxPayload {
   request_id?: string | null;

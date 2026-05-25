@@ -1,17 +1,23 @@
 import type { Sql } from "@/types";
-import type { VaultUserOptions, VaultUserResult } from "../types";
-import { buildHardDeleteEventIdempotencyKey, buildVaultEventIdempotencyKey, computeMutationValue, normalizeRootRowValue, type RootMutationContext } from "./context";
-import { importHmacKey, generateDEK, wrapKey, encryptGCMBytes } from "@/modules/crypto";
-import { resolveStaticExecutionPlan } from "./static-plan";
-import { getVaultRecordByUserId } from "./store";
-import { finalizeVaultResult, ShadowModeRollback } from "./shadow";
+import { bytesToBase64, bytesToHex } from "@/lib";
 import { fail } from "@/errors";
+import { importHmacKey, generateDEK, wrapKey, encryptGCMBytes } from "@modules/crypto";
+import type { VaultUserOptions, VaultUserResult } from "../types";
+import { createPseudonym, enqueueOutboxEvent } from "../helpers";
+import {
+  buildHardDeleteEventIdempotencyKey,
+  buildVaultEventIdempotencyKey,
+  computeMutationValue,
+  normalizeRootRowValue,
+  type RootMutationContext
+} from "./context";
+import { resolveStaticExecutionPlan } from "./static-plan";
+import { finalizeVaultResult, ShadowModeRollback } from "./shadow";
+import { getVaultRecordByUserId } from "./store";
 import { evaluateRetention, resolveRetentionWindow } from "./retention";
 import { mutateCompiledTargets } from "./compiled-targets";
 import { mutateSatelliteTargets } from "./satellite-mutation";
 import { hasBlobTargetValues, protectBlobTargets } from "../blob";
-import { createPseudonym, enqueueOutboxEvent } from "../helpers";
-import { bytesToBase64, bytesToHex } from "@/lib";
 
 const textEncoder = new TextEncoder();
 

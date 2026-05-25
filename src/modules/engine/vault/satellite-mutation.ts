@@ -1,9 +1,9 @@
 import type { Tsql } from "@/types";
-import { normalizeRootRowValue, type RootMutationContext } from "./context";
-import { generateHMACWithKey } from "@/modules/crypto";
-import type { SatelliteTarget } from "@/modules/config";
-import { redactSatelliteTable } from "./satellite";
 import { fail } from "@/errors";
+import { generateHMACWithKey } from "@modules/crypto";
+import type { SatelliteTarget } from "@modules/config";
+import { normalizeRootRowValue, type RootMutationContext } from "./context";
+import { redactSatelliteTable } from "./satellite";
 
 const DEFAULT_SATELLITE_BATCH_SIZE = 1000;
 

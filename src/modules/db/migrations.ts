@@ -4,7 +4,6 @@
  * The migration is idempotent and safe to execute on every boot.
  */
 
-import postgres from "postgres";
 import { assertIdentifier, getLogger } from "@/utils";
 import type { Sql } from "@/types";
 

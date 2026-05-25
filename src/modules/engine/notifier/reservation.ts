@@ -1,7 +1,7 @@
 import type { Sql } from "@/types";
+import { fail } from "@/errors";
 import type { NoticeReservation } from "./types";
 import type { VaultRecord } from "../helpers";
-import { fail } from "@/errors";
 
 /**
  * Reserves a notification lease on a vault row and loads the wrapped DEK needed for decryption.

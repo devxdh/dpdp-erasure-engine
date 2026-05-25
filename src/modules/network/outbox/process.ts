@@ -1,10 +1,17 @@
 import type { Sql } from "@/types";
-import type { OutboxEvent, ProcessOutboxOptions, ProcessOutboxResult } from "./types";
+import { workerError } from "@/errors";
 import { assertIdentifier, logError, outboxLogger } from "@/utils";
-import { DEFAULT_BASE_BACKOFF_MS, DEFAULT_BATCH_SIZE, DEFAULT_ENGINE_SCHEMA, DEFAULT_LEASE_SECONDS, DEFAULT_MAX_ATTEMPTS, resolvePositiveInteger } from "./shared";
+import type { OutboxEvent, ProcessOutboxOptions, ProcessOutboxResult } from "./types";
+import {
+  DEFAULT_BASE_BACKOFF_MS,
+  DEFAULT_BATCH_SIZE,
+  DEFAULT_ENGINE_SCHEMA,
+  DEFAULT_LEASE_SECONDS,
+  DEFAULT_MAX_ATTEMPTS,
+  resolvePositiveInteger
+} from "./shared";
 import { sendToAPI } from "./dispatcher";
 import { claimOutboxBatch, extendOutboxLeases, markOutboxEventFailed, markOutboxEventProcessed, releaseOutboxLease } from "./store";
-import { workerError } from "@/errors";
 
 /**
  * Claims due outbox events, dispatches them, and applies processed/retry/dead-letter state transitions.

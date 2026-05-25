@@ -2,7 +2,7 @@ import { fail } from "@/errors";
 import type { OutboxRow } from "@/modules/network";
 import type { SqlExecutor } from "@/types";
 import { canonicalJsonStringify } from "@/utils";
-import type postgres from "postgres";
+import type { JSONValue } from "postgres";
 
 const UNFINALIZED_PREVIOUS_HASH = "UNFINALIZED";
 const UNFINALIZED_CURRENT_HASH = "0000000000000000000000000000000000000000000000000000000000000000";
@@ -33,7 +33,7 @@ export async function enqueueOutboxEvent(
   idempotencyKey: string,
   now: Date
 ): Promise<OutboxRow> {
-  const jsonPayload = payload as postgres.JSONValue;
+  const jsonPayload = payload as JSONValue;
   try {
     canonicalJsonStringify(jsonPayload);
   } catch {

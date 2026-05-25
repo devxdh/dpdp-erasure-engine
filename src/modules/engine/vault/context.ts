@@ -1,8 +1,8 @@
-import type { BlobTarget, MutationRule, RootPiiColumns, SatelliteTarget } from "@/modules/config";
-import type { DryRunPlan, VaultUserOptions } from "../types";
+import type { BlobTarget, MutationRule, RootPiiColumns, SatelliteTarget } from "@modules/config";
+import { generateHMACWithKey } from "@modules/crypto";
 import { fail } from "@/errors";
 import { assertIdentifier, quoteQualifiedIdentifier } from "@/utils";
-import { generateHMACWithKey } from "@/modules/crypto";
+import type { DryRunPlan, VaultUserOptions } from "../types";
 
 /**
  * Root-table mutation configuration resolved from worker runtime options.

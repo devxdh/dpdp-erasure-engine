@@ -1,5 +1,6 @@
-import type postgres from "postgres";
+import type { JSONValue } from "postgres";
 import type { BlobAction, DiscoveredBlobObject, BlobShredReceipt } from "./types";
+import type { Tsql } from "@/types";
 
 export interface BlobObjectRow {
   id: string;
@@ -54,7 +55,7 @@ export interface InsertBlobObjectInput {
  * @returns Inserted or replayed blob object row.
  */
 export async function insertBlobObject(
-  tx: postgres.TransactionSql,
+  tx: Tsql,
   input: InsertBlobObjectInput
 ): Promise<BlobObjectRow> {
   const [row] = await tx<BlobObjectRow[]>`
@@ -141,7 +142,7 @@ export async function insertBlobObject(
  * @returns Pending blob object rows.
  */
 export async function getPendingBlobObjectsForUser(
-  tx: postgres.TransactionSql,
+  tx: Tsql,
   engineSchema: string,
   userHash: string
 ): Promise<BlobObjectRow[]> {
@@ -164,7 +165,7 @@ export async function getPendingBlobObjectsForUser(
  * @returns Number of pending blob object rows.
  */
 export async function countPendingBlobObjectsForUser(
-  tx: postgres.TransactionSql,
+  tx: Tsql,
   engineSchema: string,
   userHash: string
 ): Promise<number> {
@@ -187,7 +188,7 @@ export async function countPendingBlobObjectsForUser(
  * @returns Number of non-purged references owned by other subjects.
  */
 export async function countOtherActiveBlobReferences(
-  tx: postgres.TransactionSql,
+  tx: Tsql,
   engineSchema: string,
   row: BlobObjectRow
 ): Promise<number> {
@@ -214,7 +215,7 @@ export async function countOtherActiveBlobReferences(
  * @param now - Completion timestamp.
  */
 export async function markBlobObjectShredded(
-  tx: postgres.TransactionSql,
+  tx: Tsql,
   engineSchema: string,
   rowId: string,
   receipt: BlobShredReceipt,
@@ -223,7 +224,7 @@ export async function markBlobObjectShredded(
   await tx`
     UPDATE ${tx(engineSchema)}.blob_objects
     SET shred_status = ${receipt.status},
-        shred_receipt = ${tx.json(receipt as unknown as postgres.JSONValue)},
+        shred_receipt = ${tx.json(receipt as unknown as JSONValue)},
         legal_hold_status = CASE
           WHEN ${receipt.status === "retained_by_policy"} THEN legal_hold_status
           ELSE 'OFF'

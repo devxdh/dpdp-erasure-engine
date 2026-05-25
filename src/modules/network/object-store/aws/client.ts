@@ -1,8 +1,8 @@
 import type { Override } from "@/types";
-import type { S3AwsCredentials } from "./type";
-import { resolveAwsCredentials } from "./credentials";
 import { fail } from "@/errors";
 import { bytesToBase64 } from "@/lib";
+import type { S3AwsCredentials } from "./type";
+import { resolveAwsCredentials } from "./credentials";
 import { signAwsRequest } from "./sigv4";
 
 const textEncoder = new TextEncoder();

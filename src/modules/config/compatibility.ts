@@ -1,4 +1,3 @@
-import type postgres from "postgres";
 import type { WorkerConfig } from "./validation";
 import { fail } from "@/errors";
 import type { Sql } from "@/types";

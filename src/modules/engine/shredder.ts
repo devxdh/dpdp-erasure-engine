@@ -1,10 +1,10 @@
 import { fail } from "@/errors";
 import { getLogger } from "@/utils";
+import type { Sql } from "@/types";
 import { countPendingBlobObjectsForUser, shredBlobObjects } from "./blob";
 import type { ShredUserOptions, ShredUserResult } from "./types";
 import { DESTROYED_PII_SENTINEL, enqueueOutboxEvent, resolveSchemas } from "./helpers";
 import { getVaultRecordByUserId } from "./vault/store";
-import type { Sql } from "@/types";
 
 const logger = getLogger({ component: "shredder" });
 

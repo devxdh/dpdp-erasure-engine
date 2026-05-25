@@ -1,10 +1,8 @@
 import { CODE, fail } from "@/errors";
-import { type KeySourceConfig } from "./kms";
-import { readLegacyEnvKey, readRuntimeSecret } from "./reader";
 import type { EnvType } from "@/types";
 import { base64ToBytes } from "@/lib";
-import { } from "./kms";
-import { signAwsKmsRequest } from "./kms/signature";
+import { type KeySourceConfig, signAwsKmsRequest } from "./kms";
+import { readLegacyEnvKey, readRuntimeSecret } from "./reader";
 import { decodeKeyMaterial, encodeVaultPathSegment, fetchJson, isRecord, normalizeBase64 } from "./repository";
 
 export interface ResolveKeyOptions {

@@ -1,8 +1,8 @@
-import type { CompiledExecutionTargetInput, MutationRule } from "@/modules/config";
+import type { CompiledExecutionTargetInput, MutationRule } from "@modules/config";
 import type { Tsql } from "@/types";
-import type { SatelliteMutationResult } from "./satellite-mutation";
-import { fail } from "@/errors";
 import { assertIdentifier } from "@/utils";
+import { fail } from "@/errors";
+import type { SatelliteMutationResult } from "./satellite-mutation";
 
 interface QualifiedTarget {
   schema: string;

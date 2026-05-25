@@ -1,4 +1,4 @@
-import type { CompiledExecutionTargetInput } from "@/modules/config";
+import type { CompiledExecutionTargetInput } from "@modules/config";
 import { assertIdentifier } from "@/utils";
 import type { RootMutationContext } from "./context";
 import type { VaultUserOptions } from "../types";

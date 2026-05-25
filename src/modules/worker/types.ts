@@ -1,9 +1,14 @@
 import type { Sql } from "@/types";
-import type { MockMailer } from "../engine";
 import type { WorkerProblemDetails } from "@/errors";
-import type { DispatchNoticeResult, ShredUserResult, VaultUserResult, WorkerSecrets } from "../engine";
-import type { OutboxEvent, S3Client } from "../network";
-import type { WorkerConfig } from "../config";
+import type {
+  DispatchNoticeResult,
+  ShredUserResult,
+  VaultUserResult,
+  WorkerSecrets,
+  MockMailer
+} from "@modules/engine";
+import type { OutboxEvent, S3Client } from "@modules/network";
+import type { WorkerConfig } from "@modules/config";
 
 /**
  * Normalizes task payload accepted from Control Plane. 

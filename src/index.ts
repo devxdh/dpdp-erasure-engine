@@ -1,3 +1,6 @@
+import postgres from "postgres";
+import { normalize } from "zod";
+import type { Sql } from "./types";
 import {
   readWorkerConfigFromRuntime,
   verifySignatureWorkerConfig,
@@ -11,17 +14,13 @@ import {
   assertSchemaIntegrity,
   assertIndexPreflight
 } from "./modules/bootstrap";
-import { createFetchDispatcher, createS3Client } from "./modules/network";
+import { createFetchDispatcher, createS3Client, createControlPlaneApiClient } from "./modules/network";
+import { type MockMailer } from "./modules/engine";
+import { ComplianceWorker } from "./modules/worker";
 import { asWorkerError, workerError } from "./errors";
 import { getLogger, logError, registerProcessGuard } from "./utils";
 import { sha256HexDigest } from "./lib";
 import { readRuntimeSecret } from "./secrets";
-import type { Sql } from "./types";
-import { type MockMailer } from "./modules/engine";
-import postgres from "postgres";
-import { normalize } from "zod";
-import { createControlPlaneApiClient } from "./modules/network";
-import { ComplianceWorker } from "./modules/worker/worker";
 
 const logger = getLogger({ component: "bootstrap" });
 let deadLettersTotal = 0;
@@ -79,7 +78,9 @@ function readPositiveIntegerEnv(name: string, fallback: number): number {
 function computeIdlePollDelayMs(emptyPolls: number, baseMs: number, maxMs: number): number {
   const cappedExponent = Math.min(emptyPolls, 10);
   const exponential = Math.min(baseMs * 2 ** cappedExponent, maxMs);
-  const jitter = Math.floor(globalThis.crypto.getRandomValues(new Uint32Array(1))[0]! % Math.max(1, Math.floor(baseMs / 2)));
+  const jitter = Math.floor(globalThis.crypto.getRandomValues(
+    new Uint32Array(1))[0]! % Math.max(1, Math.floor(baseMs / 2)
+    ));
   return Math.min(exponential + jitter, maxMs);
 }
 
@@ -356,4 +357,4 @@ async function main() {
 main().catch((error) => {
   logError(logger, error, "Worker failed to start");
   process.exit(1);
-})
+});

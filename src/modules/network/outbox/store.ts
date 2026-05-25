@@ -1,8 +1,8 @@
 import { sha256HexDigest } from "@/lib";
 import type { Sql, Tsql } from "@/types";
-import type { OutboxEvent } from "./types";
 import { canonicalJsonStringify } from "@/utils";
 import { asWorkerError, fail } from "@/errors";
+import type { OutboxEvent } from "./types";
 import { calculateRetryDelayMs } from "./shared";
 
 const DEFAULT_CHAIN_FINALIZATION_LIMIT = 1000;

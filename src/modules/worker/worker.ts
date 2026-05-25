@@ -1,12 +1,17 @@
+import {
+  dispatchPreErasureNotice,
+  shredUser,
+  vaultUser,
+  type MockMailer,
+  type WorkerSecrets
+} from "@modules/engine";
+import type { WorkerConfig } from "@modules/config";
+import { processOutbox, type ProcessOutboxResult, type S3Client } from "@modules/network";
 import type { Sql } from "@/types";
-import { dispatchPreErasureNotice, shredUser, type MockMailer } from "../engine";
-import { vaultUser, type WorkerSecrets } from "../engine";
-import type { ApiClient, ComplianceWorkerOptions, TaskExecutionResult, WorkerTask } from "./types";
-import type { WorkerConfig } from "../config";
-import { processOutbox, type ProcessOutboxResult, type S3Client } from "../network";
-import { logError, workerLogger } from "@/utils";
-import { acknowledgeTask, resolveTaskSubject } from "./tasks";
 import { fail, serializeWorkerError } from "@/errors";
+import { logError, workerLogger } from "@/utils";
+import type { ApiClient, ComplianceWorkerOptions, TaskExecutionResult, WorkerTask } from "./types";
+import { acknowledgeTask, resolveTaskSubject } from "./tasks";
 
 /**
  * Orchestrates Control Plane tasks and enforces fail-closed execution semantics.

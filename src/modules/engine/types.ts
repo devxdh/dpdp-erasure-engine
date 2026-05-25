@@ -1,3 +1,5 @@
+import type { S3Client } from "@modules/network";
+import type { Sql } from "@/types";
 import type {
   BlobTarget,
   CompiledExecutionTargetInput,
@@ -5,8 +7,6 @@ import type {
   RootPiiColumns,
   SatelliteTarget,
 } from "../config";
-import type { S3Client } from "@modules/network";
-import type { Sql } from "@/types";
 
 /**
  * Cryptographic material required by worker mutation pipelines.

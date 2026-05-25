@@ -1,6 +1,6 @@
 import type { Sql } from "@/types";
 import { assertIdentifier } from "@/utils";
-import type { CompiledExecutionTarget, WorkerConfig } from "../config/validation";
+import type { CompiledExecutionTarget, WorkerConfig } from "@/modules/config/validation";
 import { fail } from "@/errors";
 
 export interface IndexRequirement {

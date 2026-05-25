@@ -1,14 +1,19 @@
 import type { Sql } from "@/types";
-import type { MockMailer } from "./types";
 import { getLogger, logError } from "@/utils";
-import type { DispatchNoticeOptions, DispatchNoticeResult, WorkerSecrets } from "../types";
 import { fail } from "@/errors";
-import { assertWorkerSecrets, enqueueOutboxEvent, resolveSchemas } from "../helpers";
-import { buildNoticeDryRunPlan, buildNotificationIdempotencyKey, resolveNoticeColumns, resolveNotificationLeaseSeconds } from "./config";
-import { getVaultRecordByUserId } from "../vault/store";
-import { clearNoticeLease, reserveNotice } from "./reservation";
 import { base64ToBytes, sha256HexDigest } from "@/lib";
-import { decryptGCMBytes, unwrapKey } from "@/modules/crypto";
+import { decryptGCMBytes, unwrapKey } from "@modules/crypto";
+import type { MockMailer } from "./types";
+import { getVaultRecordByUserId } from "../vault";
+import type { DispatchNoticeOptions, DispatchNoticeResult, WorkerSecrets } from "../types";
+import { assertWorkerSecrets, enqueueOutboxEvent, resolveSchemas } from "../helpers";
+import {
+  buildNoticeDryRunPlan,
+  buildNotificationIdempotencyKey,
+  resolveNoticeColumns,
+  resolveNotificationLeaseSeconds
+} from "./config";
+import { clearNoticeLease, reserveNotice } from "./reservation";
 import { extractNoticeRecipient } from "./payload";
 
 const logger = getLogger({ component: "notifier" });
