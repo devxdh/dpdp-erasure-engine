@@ -25,7 +25,7 @@ export function resolvePositiveInteger(
 
   if (!Number.isInteger(value) || value < 1) {
     fail({
-      code: "DPDP_OUTBOX_OPTION_INVALID",
+      code: "OUTBOX_OPTION_INVALID",
       title: "Invalid outbox option",
       detail: `${label} must be an integer greater than 0.`,
       category: "validation",

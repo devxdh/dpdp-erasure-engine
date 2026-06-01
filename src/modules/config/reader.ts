@@ -7,7 +7,7 @@ import {
 } from "./validation";
 import yaml from "js-yaml";
 import type { EnvType } from "@/types";
-import { resolveConfiguredKey } from "@/secrets";
+import { resolveConfiguredKey, resolveConfiguredKeyAsync } from "@/secrets";
 
 /**
 * Reads a configuration file by detecting the current JavaScript runtime.
@@ -74,6 +74,43 @@ async function readAndValidateWorkerYaml(configPath: string | URL): Promise<Work
   return parsedConfig;
 }
 
+/**
+ * Reads `compliance.worker.yml`, validates it strictly, and resolves local cryptographic secrets.
+ *
+ * This synchronous path is intended for tests and local env/file sources. Production boot should
+ * use `readWorkerConfigFromRuntime` so remote KMS/Vault providers can be resolved without blocking
+ * or silently falling back to process env.
+ *
+ * @param env - Environment map used to resolve key material.
+ * @param configPath - Worker YAML path.
+ * @returns Fully validated worker configuration with decoded binary keys.
+ * @throws {WorkerError} When YAML parsing, schema validation, or local secret decoding fails.
+ */
+export async function readWorkerConfig(
+  env: Record<string, string | undefined> = process.env,
+  configPath: string | URL = new URL("../../compliance.worker.yml", import.meta.url)
+): Promise<WorkerConfig> {
+  const parsedConfig = await readAndValidateWorkerYaml(configPath);
+  const masterKey = await resolveConfiguredKeyAsync({
+    env,
+    keyName: parsedConfig.security.master_key_env,
+    legacyEnvName: parsedConfig.security.master_key_env,
+    source: parsedConfig.security.master_key_source,
+  });
+  const hmacKey = await resolveConfiguredKeyAsync({
+    env,
+    keyName: parsedConfig.security.hmac_key_env,
+    legacyEnvName: parsedConfig.security.hmac_key_env,
+    fallbackLegacyEnvName: parsedConfig.security.master_key_env,
+    source: parsedConfig.security.hmac_key_source,
+  });
+
+  return {
+    ...parsedConfig,
+    masterKey,
+    hmacKey,
+  };
+}
 
 /**
  * Reads `compliance.worker.yml` and resolves env, file, AWS KMS, GCP Secret Manager, or Vault keys.

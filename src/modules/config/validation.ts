@@ -362,8 +362,8 @@ export const workerYamlSchema = z
     security: z
       .object({
         notification_lease_seconds: z.number().int().min(1).default(120),
-        master_key_env: z.string().min(1).default("DPDP_MASTER_KEY"),
-        hmac_key_env: z.string().min(1).default("DPDP_HMAC_KEY"),
+        master_key_env: z.string().min(1).default("MASTER_KEY"),
+        hmac_key_env: z.string().min(1).default("HMAC_KEY"),
         master_key_source: keySourceSchema.optional(),
         hmac_key_source: keySourceSchema.optional(),
       })
