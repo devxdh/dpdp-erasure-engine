@@ -1,5 +1,6 @@
 {
   "name": "compliance-worker",
+  "version": "1",
   "module": "index.ts",
   "type": "module",
   "private": true,
@@ -19,7 +20,13 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@inquirer/prompts": "^8.5.2",
+    "boxen": "^8.0.1",
+    "cli-table3": "^0.6.5",
+    "commander": "^15.0.0",
     "js-yaml": "^4.1.1",
+    "ora": "^9.4.0",
+    "picocolors": "^1.1.1",
     "pino": "^10.3.1",
     "postgres": "^3.4.9",
     "zod": "^4.4.2"

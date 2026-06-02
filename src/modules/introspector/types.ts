@@ -78,8 +78,54 @@ export interface ClassifierOptions {
   threshold?: number;
 }
 
+export interface IntrospectorReportFinding {
+  table: string;
+  column: string;
+  dataType: string;
+  confidence: number;
+  metadataScore: number;
+  contentMatchRatio: number;
+  sampleSize: number;
+  matchedSignatures: string[];
+}
+
+export interface IntrospectorReportSummary {
+  rootTable: string;
+  generatedAt: string;
+  schemaHash: string;
+  targetCount: number;
+  tablesWithPii: number;
+  piiColumnCount: number;
+  highConfidenceCount: number;
+  reviewRequiredCount: number;
+  potentialLogicalLinkCount: number;
+}
+
+export interface IntrospectorReport {
+  summary: IntrospectorReportSummary;
+  findings: IntrospectorReportFinding[];
+  potentialLogicalLinks: PotentialLogicalLink[];
+  nextSteps: string[];
+}
+
 export interface VerifySchemaIntegrityOptions {
   sql: Sql;
   configPath: string;
   env?: Record<string, string | undefined>;
+}
+
+export interface IntrospectorCliOptions {
+  url?: string;
+  root?: string;
+  schema?: string;
+  output?: string;
+  maxDepth?: string;
+  samplePercent?: string;
+  sampleLimit?: string;
+  threshold?: string;
+  config?: string;
+  verifyOnly?: boolean;
+  report?: string;
+  jsonReport?: string;
+  failOnReview?: boolean;
 }
