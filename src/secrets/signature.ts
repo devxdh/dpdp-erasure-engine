@@ -24,7 +24,7 @@ export async function verifySignedWorkerConfig(
 ): Promise<void> {
   const publicKeySpkiBase64 = await readRuntimeSecret(
     env,
-    "DPDP_CONFIG_SIGNING_PUBLIC_KEY_SPKI_BASE64"
+    "CONFIG_SIGNING_PUBLIC_KEY_SPKI_BASE64"
   );
   if (!publicKeySpkiBase64) {
     return;
@@ -36,7 +36,7 @@ export async function verifySignedWorkerConfig(
     signatureBase64 = (await Bun.file(signaturePath).text()).trim();
   } catch (error) {
     fail({
-      code: "DPDP_CONFIG_SIGNATURE_MISSING",
+      code: "CONFIG_SIGNATURE_MISSING",
       title: "Missing worker config signature",
       detail: `Detached config signature ${signaturePath} is required when config signing is enabled.`,
       category: "configuration",
@@ -63,7 +63,7 @@ export async function verifySignedWorkerConfig(
 
   if (!verified) {
     fail({
-      code: "DPDP_CONFIG_SIGNATURE_INVALID",
+      code: "CONFIG_SIGNATURE_INVALID",
       title: "Invalid worker config signature",
       detail: `Detached config signature ${signaturePath} failed verification.`,
       category: "integrity",

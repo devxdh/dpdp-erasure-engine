@@ -10,7 +10,7 @@ export async function signAction(options: { config: string; key?: string }) {
   UI.header("Manifest Signing");
 
   const configPath = path.resolve(options.config);
-  const keyPath = options.key ? path.resolve(options.key) : "avantii.pkcs8.key";
+  const keyPath = options.key ? path.resolve(options.key) : "worker.pkcs8.key";
 
   UI.info(`Manifest : ${pc.bold(options.config)}`);
   UI.info(`Key      : ${pc.bold(keyPath)}`);

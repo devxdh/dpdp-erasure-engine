@@ -7,9 +7,9 @@ import { resolveRetentionYears } from "../helpers";
  * Inputs required to evaluate the dynamic legal retention policy.
  */
 export interface RetentionEvaluationConfig {
-  defualt_retention_years: number;
+  default_retention_years: number;
   root_id_column: string;
-  retention_rule: readonly RetentionRule[];
+  retention_rules: readonly RetentionRule[];
   app_schema: string;
 }
 
@@ -91,11 +91,11 @@ export async function evaluateRetention(
   tenantId?: string
 ): Promise<RetentionEvaluationResult> {
   const rootIdColumn = assertIdentifier(rules.root_id_column, "graph root id column");
-  let selectedYears = resolveRetentionYears(rules.defualt_retention_years);
+  let selectedYears = resolveRetentionYears(rules.default_retention_years);
   let selectedRuleName = "DEFAULT";
   let selectedRuleCitation = "Configured default_retention_years policy";
 
-  for (const rule of rules.retention_rule) {
+  for (const rule of rules.retention_rules) {
     for (const tableName of rule.if_has_data_in) {
       const safeTable = assertIdentifier(tableName, "retention rule evidence table");
       const tenantFilter = tenantId ? tx` AND tenant_id = ${tenantId}` : tx``;

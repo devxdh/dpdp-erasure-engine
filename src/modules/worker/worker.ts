@@ -107,6 +107,7 @@ export class ComplianceWorker {
           noticeEmailColumn: this.config.graph.notice_email_column,
           noticeNameColumn: this.config.graph.notice_name_column,
           rootPiiColumns: this.config.graph.root_pii_columns,
+          now,
         });
 
       case "SHRED_USER":

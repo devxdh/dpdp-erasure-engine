@@ -1,5 +1,5 @@
-import type { BlobTarget } from "@/modules/config";
-import type { S3Client } from "@/modules/network";
+import type { BlobTarget } from "@modules/config";
+import type { S3Client } from "@modules/network";
 
 export type BlobAction = BlobTarget["action"];
 

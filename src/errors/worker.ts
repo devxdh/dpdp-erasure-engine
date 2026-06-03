@@ -18,8 +18,8 @@ import {
 import { ZodError } from "zod";
 
 function buildCause(cause: unknown): Error | undefined {
+  if (cause == null) return undefined;
   if (cause instanceof Error) return cause;
-  if (cause === null) return undefined;
 
   return new Error(typeof cause === "string" ? cause : JSON.stringify(cause));
 }

@@ -167,9 +167,9 @@ export async function runVaultMutation(
           tx,
           subjectId,
           {
-            defualt_retention_years: context.defaultRetentionYears,
+            default_retention_years: context.defaultRetentionYears,
             root_id_column: context.rootContext.rootIdColumn,
-            retention_rule: context.options.retentionRules ?? [],
+            retention_rules: context.options.retentionRules ?? [],
             app_schema: context.appSchema
           },
           context.tenantId
@@ -204,7 +204,7 @@ export async function runVaultMutation(
           )
           : [];
 
-        const satelliteMutations = { ...compiledMutations, ...manualSatelliteMutations };
+        const satelliteMutations = [...compiledMutations, ...manualSatelliteMutations];
         const hasBlobObjects = await hasBlobTargetValues({
           tx,
           appSchema: context.appSchema,

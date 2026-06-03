@@ -8,12 +8,13 @@
     "dev": "bun src/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --fileParallelism=false",
-    "test:ui": "vitest run --ui --fileParallelism=false"
+    "test:ui": "vitest run --ui"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/js-yaml": "^4.0.9",
     "@types/pino": "^7.0.5",
+    "@vitest/ui": "4.1.5",
     "vitest": "^4.1.5"
   },
   "peerDependencies": {

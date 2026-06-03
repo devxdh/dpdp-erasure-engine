@@ -8,7 +8,7 @@ import type {
 } from "./types";
 import { compileStaticDag, discoverPotentialLogicalLinks } from "./dag";
 import { classifyDagTargets } from "./classifier";
-import { detectSchemaDrift } from "@/modules/db";
+import { detectSchemaDrift } from "@modules/db";
 import { renderIntrospectorYaml } from "./yaml";
 import { fail } from "@/errors";
 import { readWorkerConfig } from "../config";
@@ -105,7 +105,7 @@ export async function verifySchemaIntegrity(options: VerifySchemaIntegrityOption
 
   if (liveHash !== expectedHash) {
     fail({
-      code: "DPDP_INTROSPECTOR_SCHEMA_VERIFY_FAILED",
+      code: "INTROSPECTOR_SCHEMA_VERIFY_FAILED",
       title: "Schema verification failed",
       detail: `Live schema hash ${liveHash} does not match legal attestation hash ${expectedHash}.`,
       category: "integrity",

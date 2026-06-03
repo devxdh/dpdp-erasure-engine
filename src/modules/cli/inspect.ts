@@ -68,7 +68,7 @@ export async function inspectAction(options: { config: string }): Promise<void> 
   UI.keyValue("Retention Rules", String(config.compliance_policy.retention_rules.length));
 
   if ((config.rules ?? []).length === 0) {
-    UI.warn("No compiled DAG rules found. Run avantii-worker introspect and review the generated targets.");
+    UI.warn("No compiled DAG rules found. Run compliance-worker introspect and review the generated targets.");
   } else {
     const table = UI.table(["Rule", "Target"]);
     for (const rule of config.rules ?? []) {
@@ -80,7 +80,7 @@ export async function inspectAction(options: { config: string }): Promise<void> 
   }
 
   UI.step(4, "Next Checks");
-  UI.subStep("Run avantii-worker check-integrity --config <path> against the target database.");
-  UI.subStep("Run avantii-worker sign --config <path> after DPO approval.");
+  UI.subStep("Run compliance-worker check-integrity --config <path> against the target database.");
+  UI.subStep("Run compliance-worker sign --config <path> after DPO approval.");
   UI.subStep("Deploy only signed manifests with matching schema hashes.");
 }

@@ -191,8 +191,8 @@ export function buildHardDeleteEventIdempotencyKey(
   subjectId: string | number
 ): string {
   return options.requestId
-    ? `vault:${options.requestId}`
-    : `vault:${appSchema}:${rootTable}:${rootIdColumn}:${String(subjectId)}`;
+    ? `hard-delete:${options.requestId}`
+    : `hard-delete:${appSchema}:${rootTable}:${rootIdColumn}:${String(subjectId)}`;
 }
 
 /**

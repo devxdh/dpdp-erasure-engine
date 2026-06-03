@@ -1,6 +1,6 @@
 import type { Sql } from "@/types";
 import { assertIdentifier } from "@/utils";
-import type { CompiledExecutionTarget, WorkerConfig } from "@/modules/config/validation";
+import type { CompiledExecutionTarget, WorkerConfig } from "@modules/config/validation";
 import { fail } from "@/errors";
 
 export interface IndexRequirement {
@@ -57,7 +57,7 @@ function addRequirement(
     schema: assertIdentifier(requirement.schema, "index requirement schema"),
     table: assertIdentifier(requirement.table, "index requirement schema"),
     columns: requirement.columns.map((column) => assertIdentifier(column, "index requirement schema")),
-    reason: assertIdentifier(requirement.reason, "index requirement schema"),
+    reason: requirement.reason,
   }
   const key = `${safeRequirement.schema}.${safeRequirement.table}:${safeRequirement.columns.join(",")}`;
   requirements.set(key, safeRequirement);

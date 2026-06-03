@@ -1,10 +1,10 @@
-import type { BlobTarget } from "@/modules/config";
-import { createS3Client, parseS3ObjectUrl, type S3Client, type S3ObjectVersion } from "@/modules/network";
+import type { BlobTarget } from "@modules/config";
+import { createS3Client, parseS3ObjectUrl, type S3Client, type S3ObjectVersion } from "@modules/network";
 import type { Tsql } from "@/types";
 import type { BlobProtectionResult, BlobShredReceipt, DiscoveredBlobObject } from "./types";
 import { fail } from "@/errors";
 import { yieldWorkerEventLoop } from "../vault/satellite-mutation";
-import { generateHMAC } from "@/modules/crypto";
+import { generateHMAC } from "@modules/crypto";
 import { bytesToBase64 } from "@/lib";
 import { countOtherActiveBlobReferences, getPendingBlobObjectsForUser, insertBlobObject, markBlobObjectShredded, type BlobObjectRow } from "./store";
 

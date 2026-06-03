@@ -308,6 +308,77 @@ const retentionRuleSchema = z
 
 export type RetentionRule = z.infer<typeof retentionRuleSchema>;
 
+const purgeSelectorSchema = z
+  .discriminatedUnion("kind", [
+    z
+      .object({
+        kind: z.literal("boolean_column"),
+        column: z.string().min(1),
+        value: z.boolean().default(true),
+      })
+      .strict(),
+    z
+      .object({
+        kind: z.literal("enum_column"),
+        column: z.string().min(1),
+        values: z.array(z.string().min(1)).min(1),
+      })
+      .strict(),
+    z
+      .object({
+        kind: z.literal("timestamp_before"),
+        column: z.string().min(1),
+        older_than_days: z.number().int().min(0).optional(),
+        before: z.iso.datetime().optional(),
+      })
+      .strict()
+      .superRefine((value, ctx) => {
+        if (value.older_than_days === undefined && value.before === undefined) {
+          ctx.addIssue({
+            code: "custom",
+            message: "timestamp_before purge selector requires older_than_days or before.",
+            path: ["older_than_days"],
+          });
+        }
+      }),
+  ])
+  .superRefine((value, ctx) => {
+    try {
+      assertIdentifier(value.column, "purge selector column");
+    } catch (error) {
+      ctx.addIssue({
+        code: "custom",
+        message: error instanceof Error ? error.message : "Invalid purge selector column.",
+        path: ["column"],
+      });
+    }
+  });
+
+export type PurgeSelector = z.infer<typeof purgeSelectorSchema>;
+
+
+const purgePolicySchema = z
+  .object({
+    enabled: z.boolean().default(false),
+    selector: purgeSelectorSchema.optional(),
+    max_batch_size: z.number().int().min(1).max(100_000).default(10_000),
+    actor_opaque_id: z.string().min(1).default("system:purge"),
+    legal_framework: z.string().min(1).default("DPDP_2023"),
+    legal_citation: z.string().min(1).optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (value.enabled && !value.selector) {
+      ctx.addIssue({
+        code: "custom",
+        message: "purge_policy.selector is required when purge_policy.enabled is true.",
+        path: ["selector"],
+      });
+    }
+  });
+
+export type PurgePolicy = z.infer<typeof purgePolicySchema>;
+
 const legalAttestationSchema = z
   .object({
     dpo_identifier: z.string().min(1),
@@ -350,6 +421,12 @@ export const workerYamlSchema = z
       .strict(),
     satellite_targets: z.array(satelliteTargetSchema).default([]),
     blob_targets: z.array(blobTargetSchema).default([]),
+    purge_policy: purgePolicySchema.default({
+      enabled: false,
+      max_batch_size: 10_000,
+      actor_opaque_id: "system:purge",
+      legal_framework: "DPDP_2023",
+    }),
     rules: z.array(compiledExecutionRuleSchema).default([]),
     outbox: z
       .object({
@@ -460,7 +537,8 @@ export const workerYamlSchema = z
 
 export type WorkerYamlConfig = z.infer<typeof workerYamlSchema>;
 
-export interface WorkerConfig extends Omit<WorkerYamlConfig, "rules"> {
+export interface WorkerConfig extends Omit<WorkerYamlConfig, "rules" | "purge_policy"> {
+  purge_policy?: PurgePolicy;
   rules?: CompiledExecutionRule[];
   masterKey: Uint8Array;
   hmacKey: Uint8Array;

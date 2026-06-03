@@ -68,8 +68,8 @@ export function buildIntrospectorReport(draft: IntrospectorDraft): IntrospectorR
     nextSteps: [
       "Review every PII column and potential logical link with the application owner.",
       "Copy reviewed targets into compliance.worker.yml and complete legal_attestation.",
-      "Run avantii-worker check-integrity before allowing live worker boot.",
-      "Sign the reviewed manifest with avantii-worker sign after DPO approval.",
+      "Run compliance-worker check-integrity before allowing live worker boot.",
+      "Sign the reviewed manifest with compliance-worker sign after DPO approval.",
     ],
   };
 }
@@ -82,7 +82,7 @@ export function buildIntrospectorReport(draft: IntrospectorDraft): IntrospectorR
  */
 export function renderIntrospectorMarkdown(report: IntrospectorReport): string {
   const lines = [
-    "# Avantii Introspector Report",
+    "# Compliance Introspector Report",
     "",
     "## Summary",
     "",

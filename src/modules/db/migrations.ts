@@ -30,7 +30,7 @@ export async function runMigrations(
     await tx`CREATE SCHEMA IF NOT EXISTS ${tx(engineSchema)}`;
 
     await tx`
-      create table if not exists ${tx(safeEngineSchema)}.pii_valut (
+      CREATE TABLE IF NOT EXISTS ${tx(safeEngineSchema)}.pii_vault (
         user_uuid_hash TEXT primary key,
         request_id TEXT,
         tenant_id TEXT NOT NULL DEFAULT '',
@@ -39,7 +39,7 @@ export async function runMigrations(
         pseudonym TEXT NOT NULL,
         encrypted_pii JSONB NOT NULL,
         salt TEXT NOT NULL,
-        dependency_count INTEGER NOT NULL DEAFULT 0,
+        dependency_count INTEGER NOT NULL DEFAULT 0,
         trigger_source TEXT,
         legal_framework TEXT,
         actor_opaque_id TEXT,
@@ -178,12 +178,12 @@ export async function runMigrations(
 
     await tx`
       CREATE INDEX IF NOT EXISTS blob_objects_shred_idx
-      ON ${tx(safeEngineSchema)}.blobl_objects (user_uuid_hash, shred_status)
+      ON ${tx(safeEngineSchema)}.blob_objects (user_uuid_hash, shred_status)
     `
 
     await tx`
       CREATE INDEX IF NOT EXISTS blob_objects_object_idx
-      ON ${tx(safeEngineSchema)}.blobl_objects (provider, bucket, object_key, shred_status)
+      ON ${tx(safeEngineSchema)}.blob_objects (provider, bucket, object_key, shred_status)
     `
 
     await tx`

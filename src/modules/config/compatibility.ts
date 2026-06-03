@@ -86,6 +86,10 @@ export async function assertConfigSchemaCompatibility(
       requiredRootColumns.add(config.graph.notice_name_column);
     }
 
+    if (config.purge_policy?.enabled && config.purge_policy.selector?.kind == "boolean_column") {
+      requiredRootColumns.add(config.purge_policy.selector.column);
+    }
+
     for (const column of requiredRootColumns) {
       if (!rootColumns.has(column)) {
         violations.push(

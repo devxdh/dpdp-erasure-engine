@@ -94,7 +94,7 @@ export function resolveStaticExecutionPlan(
       seen.add(key);
 
       if (key !== rootKey) {
-        dependencyCount -= 1;
+        dependencyCount += 1;
       }
     };
 

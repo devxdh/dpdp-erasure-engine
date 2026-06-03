@@ -133,7 +133,7 @@ program
 
 program.on("command:*", () => {
   console.error(pc.red(`\nInvalid command: ${pc.bold(program.args.join(" "))}`));
-  console.error(`Refer to ${pc.cyan("avantii-worker --help")} for available utilities.\n`);
+  console.error(`Refer to ${pc.cyan("compliance-worker --help")} for available utilities.\n`);
   process.exit(1);
 });
 

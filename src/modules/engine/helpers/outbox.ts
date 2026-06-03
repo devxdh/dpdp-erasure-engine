@@ -1,5 +1,5 @@
 import { fail } from "@/errors";
-import type { OutboxRow } from "@/modules/network";
+import type { OutboxRow } from "@modules/network";
 import type { SqlExecutor } from "@/types";
 import { canonicalJsonStringify } from "@/utils";
 import type { JSONValue } from "postgres";

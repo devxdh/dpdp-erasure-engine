@@ -47,7 +47,7 @@ function resolveMaxDepth(input?: number): number {
 
   if (!Number.isInteger(input) || input < 1) {
     fail({
-      code: "DPDP_GRAPH_MAX_DEPTH_INVALID",
+      code: "GRAPH_MAX_DEPTH_INVALID",
       title: "Invalid graph max depth",
       detail: "maxDepth must be an integer greater than 0.",
       category: "validation",
@@ -90,7 +90,7 @@ export async function getDependencyGraph(
 
   if (!rootExists?.oid) {
     fail({
-      code: "DPDP_GRAPH_ROOT_TABLE_MISSING",
+      code: "GRAPH_ROOT_TABLE_MISSING",
       title: "Root table not found",
       detail: `Root table ${safeSchema}.${safeRootTable} does not exist.`,
       category: "validation",
@@ -170,7 +170,7 @@ export async function getDependencyGraph(
     const unsafe = graph.find((node) => UNSAFE_DELETE_ACTIONS.has(node.delete_action));
     if (unsafe) {
       fail({
-        code: "DPDP_GRAPH_UNSAFE_DELETE_ACTION",
+        code: "GRAPH_UNSAFE_DELETE_ACTION",
         title: "Unsafe foreign-key delete action detected",
         detail: `Foreign key ${unsafe.table_name}.${unsafe.column_name} uses ON DELETE ${unsafe.delete_action}; the worker refuses to run because Postgres could mutate dependent data outside the explicit erasure plan.`,
         category: "integrity",
@@ -189,7 +189,7 @@ export async function getDependencyGraph(
 
   if (result.some((row) => row.depth >= maxDepth || row.reached_limit)) {
     fail({
-      code: "DPDP_GRAPH_DEPTH_LIMIT_REACHED",
+      code: "GRAPH_DEPTH_LIMIT_REACHED",
       title: "Dependency graph depth limit reached",
       detail: `Dependency graph for ${safeSchema}.${safeRootTable} reached the safety limit of ${maxDepth}. Increase maxDepth before running destructive operations.`,
       category: "integrity",

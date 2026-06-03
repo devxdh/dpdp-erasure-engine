@@ -22,7 +22,7 @@ function containsConfiguredPiiColumn(query: string, piiColumns: string[]): boole
  * @param piiColumns - Client-declared PII columns from `graph.root_pii_columns`.
  * @returns Redacted parameters safe for structured debug logs.
  */
-export function redactSqlDebugParamaters(
+export function redactSqlDebugParameters(
   query: string,
   parameters: readonly unknown[],
   piiColumns: readonly string[]
@@ -53,7 +53,7 @@ export function createRedactingSqlDebugLogger(
   return (_connection: unknown, query: string, parameters: unknown[]) => {
     logger.debug({
       query: query.replace(/\s+/g, " ").trim(),
-      parameters: redactSqlDebugParamaters(query, parameters, piiColumns)
+      parameters: redactSqlDebugParameters(query, parameters, piiColumns)
     },
       "Postgres query executed"
     );

@@ -1,5 +1,5 @@
 import { bytesToBase64 } from "@/lib";
-import { generateHMAC } from "@/modules/crypto/hmac";
+import { generateHMAC } from "@modules/crypto/hmac";
 
 /**
  * Produces a deterministic subject hash used as the worker's irreversible lookup key.
