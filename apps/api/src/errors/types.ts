@@ -1,4 +1,4 @@
-import type { ApiValidationIssue } from "@/validation/zod";
+import type { ApiValidationIssue } from "@/validation";
 
 export type ApiErrorCode = `API_${string}`;
 

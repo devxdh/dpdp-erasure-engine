@@ -327,7 +327,7 @@ async function markProcessedRows(
 
   await tx.unsafe(
     `
-      INSERT INTO pg_temp.avantii_compiled_target_rows (target_key, row_key)
+      INSERT INTO pg_temp.compliance_compiled_target_rows (target_key, row_key)
       VALUES ${values}
       ON CONFLICT DO NOTHING
     `,
@@ -436,7 +436,7 @@ export async function mutateCompiledTargets(
     .sort((left, right) => right.depth - left.depth || left.key.localeCompare(right.key));
   if (executableTargets.length > 0) {
     await tx.unsafe(`
-      CREATE TEMP TABLE IF NOT EXISTS pg_temp.avantii_compiled_target_rows (
+      CREATE TEMP TABLE IF NOT EXISTS pg_temp.compliance_compiled_target_rows (
         target_key TEXT NOT NULL,
         row_key TEXT NOT NULL,
         PRIMARY KEY (target_key, row_key)
@@ -482,7 +482,7 @@ export async function mutateCompiledTargets(
         WHERE ${rootAlias}.${quoteIdentifier(rootIdColumn)} = $1${tenantFilter}
           AND NOT EXISTS (
             SELECT 1
-            FROM pg_temp.avantii_compiled_target_rows AS processed
+            FROM pg_temp.compliance_compiled_target_rows AS processed
             WHERE processed.target_key = ${targetKeyParameter}
               AND processed.row_key = ${rowKeyExpression}
           )

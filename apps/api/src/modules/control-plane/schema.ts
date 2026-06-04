@@ -141,7 +141,7 @@ export const integrationProviderParamSchema = z
  * Mapping from a GRC platform subject reference to the client's opaque subject id.
  *
  * Some GRC products can emit only an email/phone identifier. The service hashes that value
- * before storage; this schema permits the transient input while still requiring the Avantii
+ * before storage; this schema permits the transient input while still requiring the Compliance
  * side of the mapping to remain opaque.
  */
 export const externalSubjectMappingSchema = z

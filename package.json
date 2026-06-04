@@ -10,6 +10,7 @@
     "worker:cli": "bun run --cwd ./apps/worker cli"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.8.0",
     "hono": "^4.12.23",
     "pdf-lib": "^1.17.1",
     "pino": "^10.3.1",

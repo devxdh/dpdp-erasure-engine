@@ -5,6 +5,7 @@
     "": {
       "name": "compliance-worker",
       "dependencies": {
+        "@hono/zod-validator": "^0.8.0",
         "hono": "^4.12.23",
         "pdf-lib": "^1.17.1",
         "pino": "^10.3.1",
@@ -63,6 +64,8 @@
     "@engine/api": ["@engine/api@workspace:apps/api"],
 
     "@engine/worker": ["@engine/worker@workspace:apps/worker"],
+
+    "@hono/zod-validator": ["@hono/zod-validator@0.8.0", "", { "peerDependencies": { "hono": ">=4.10.0", "zod": "^3.25.0 || ^4.0.0" } }, "sha512-5uS4S1/LKtZQYvD4BtpPUFkOv8d1wNxHHrChm26buMiEYc1FrHWvDUaKVBwkiVtvSExHSpLGDvcnpI2Copyj9w=="],
 
     "@inquirer/ansi": ["@inquirer/ansi@2.0.7", "", {}, "sha512-3eTuUO1vH2cZm2ZKHeQxnOqlTi9EfZDGgIe3BL3I4u+rJHocr9Fz86M4fjYABPvFnQG/gGK551HqDiIcETwU6Q=="],
 

@@ -1,4 +1,4 @@
-import { formatZodIssues, summarizeZodError, type ApiValidationIssue } from "@/validation/zod";
+import { formatZodIssues, summarizeZodError, type ApiValidationIssue } from "@/validation";
 import type { ApiErrorCategory, ApiErrorCode, ApiErrorContext, ApiErrorFallback, ApiErrorOptions, ApiProblemDetails } from "./types";
 import { ZodError } from "zod";
 import { HTTPException } from "hono/http-exception";
