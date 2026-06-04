@@ -1,7 +1,8 @@
 import { Hono, type Context, type Next } from "hono";
 import type { CoeSigner } from "./crypto";
 import type { Sql } from "./types";
-import { getLogger } from "./utils";
+import { getLogger } from "./observability";
+import { ControlPlaneRepository, ControlPlaneService } from "@modules/control-plane";
 
 /**
  * Dependency required to construct the Control Plane HTTP app.
@@ -73,4 +74,23 @@ async function requestContextMiddleware(c: Context, next: Next) {
  */
 export function createApp(options: CreateAppOptions) {
   const app = new Hono();
+  const repository = new ControlPlaneRepository(
+    options.sql,
+    options.controlSchema,
+    options.taskLeaseSeconds ?? 60,
+    options.taskMaxAttempts ?? 10,
+    options.taskBaseBackoffMs ?? 1000
+  );
+
+  const service = new ControlPlaneService({
+    repository,
+    signer: options.signer,
+    workerSharedSecret: options.workerSharedSecret,
+    workerClientName: options.workerClientName ?? "worker-1",
+    maxOutboxPayloadBytes: options.maxOutboxPayloadBytes ?? 32_768,
+    webhookTimeoutMs: options.webhookTimeoutMs,
+    shadowBurnInRequired: options.shadowBurnInRequired,
+    shadowRequiredSuccesses: options.shadowRequiredSuccesses,
+    now: options.now,
+  });
 }
