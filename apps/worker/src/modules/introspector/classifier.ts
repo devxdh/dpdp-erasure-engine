@@ -1,4 +1,4 @@
-import { fail } from "../../errors";
+import { fail } from "@/errors";
 import type { ClassifierOptions, ColumnTaxonomy, DagTarget, QualifiedTable } from "./types";
 
 const textEncoder = new TextEncoder();

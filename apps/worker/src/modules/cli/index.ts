@@ -2,7 +2,8 @@
 import { Command } from "commander";
 import pc from "picocolors";
 
-const pkg = await Bun.file(import.meta.resolve("../../../package.json")).json();
+const pkgPath = new URL("../../../package.json", import.meta.url);
+const pkg = await Bun.file(pkgPath).json();
 
 const program = new Command();
 
@@ -136,5 +137,48 @@ program.on("command:*", () => {
   console.error(`Refer to ${pc.cyan("compliance-worker --help")} for available utilities.\n`);
   process.exit(1);
 });
+
+const rawArgs = process.argv.slice(2);
+
+if (rawArgs.length === 0) {
+  if (process.stdout.isTTY) {
+    try {
+      const { select } = await import("@inquirer/prompts");
+      console.log(pc.cyan(`\n💼 Compliance Engine Operator Interactive Console [v${pkg.version}]`));
+
+      const choice = await select({
+        message: "Select a compliance operation utility to run:",
+        choices: [
+          { name: "Initialize legal compliance manifest (init)", value: "init" },
+          { name: "Metadata-only schema scan for PII (scan)", value: "scan" },
+          { name: "Offline compile FK DAG and draft mappings (introspect)", value: "introspect" },
+          { name: "CI/CD check: Verify schema integrity (verify-schema)", value: "verify-schema" },
+          { name: "Visualize recursive table dependencies (graph)", value: "graph" },
+          { name: "Simulate an erasure/mutation safely (dry-run)", value: "dry-run" },
+          { name: "Exit Console", value: "exit" },
+        ],
+      });
+
+      if (choice === "exit") {
+        process.exit(0);
+      }
+
+      const simulatedArgv: string[] = [
+        Bun.argv[0] ?? "bun",
+        Bun.argv[1] ?? import.meta.path,
+        choice
+      ];
+      program.parse(simulatedArgv);
+
+    } catch {
+      process.exit(0);
+    }
+  } else {
+    program.outputHelp();
+    process.exit(0);
+  }
+} else {
+  program.parse(process.argv);
+}
 
 program.parse();
