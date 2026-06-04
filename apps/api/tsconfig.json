@@ -6,11 +6,8 @@
         "./src/*"
       ],
       "@modules/*": [
-        "../worker/src/modules/*"
+        "./src/modules/*"
       ],
-      "@shared/*": [
-        "../worker/src/shared/*"
-      ]
     }
   },
   "include": [

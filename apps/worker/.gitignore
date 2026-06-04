@@ -1,0 +1,13 @@
+node_modules
+out
+dist
+*.tgz
+coverage
+*.lcov
+logs
+_.log
+.env
+.eslintcache
+.cache
+*.tsbuildinfo
+.DS_Store
