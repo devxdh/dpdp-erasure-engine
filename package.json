@@ -7,7 +7,8 @@
   "scripts": {
     "worker:test": "bun run --cwd ./apps/worker test",
     "worker:typecheck": "bun run --cwd ./apps/worker typecheck",
-    "worker:cli": "bun run --cwd ./apps/worker cli"
+    "worker:cli": "bun run --cwd ./apps/worker cli",
+    "api:typecheck": "bun run --cwd ./apps/api typecheck"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.8.0",

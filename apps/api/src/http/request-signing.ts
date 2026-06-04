@@ -2,7 +2,7 @@ import type { Context, Next } from "hono";
 import type postgres from "postgres";
 import { assertIdentifier } from "../db/identifiers";
 import { fail } from "../errors";
-import { computeHmacSha256Hex, verifyHmacSha256Hex } from "../utils/hmac";
+import { computeHmacSha256Hex, verifyHmacSha256Hex } from "@/crypto";
 
 const textEncoder = new TextEncoder();
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
