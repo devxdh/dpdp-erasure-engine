@@ -30,7 +30,7 @@ import { PdfCertificateGenerator, type ProofOfErasureData } from "./pdf-generato
 import { recordUsageEvent, recordWorkerOutboxEvent, getLogger } from "@/observability";
 import { s3PutObject } from "@/utils";
 import { verifyHmacSha256Hex } from "@/crypto";
-import { normalizeProviderSubjectLookup } from "@/modules/webhooks";
+import { normalizeProviderSubjectLookup } from "@modules/webhooks";
 
 const logger = getLogger({ component: "control-plane-service" });
 const textEncoder = new TextEncoder();
