@@ -108,15 +108,4 @@ describe("Worker config release enforcement", () => {
     });
     expect(rejectedAfterRevoke.status).toBe(403);
   });
-
-  it("exposes queue, webhook, and archive backlog metrics", async () => {
-    const { app } = await setup();
-
-    const metrics = await app.request("/metrics");
-    expect(metrics.status).toBe(200);
-    const body = await metrics.text();
-    expect(body).toContain("dpdp_api_task_queue_depth");
-    expect(body).toContain("dpdp_api_webhook_outbox_depth");
-    expect(body).toContain("dpdp_api_certificate_archive_depth");
-  });
 });

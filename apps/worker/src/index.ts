@@ -23,34 +23,8 @@ import { sha256HexDigest } from "./lib";
 import { readRuntimeSecret } from "./secrets";
 
 const logger = getLogger({ component: "bootstrap" });
-let deadLettersTotal = 0;
 let workerBooted = false;
 let workerQuarantined = false;
-
-async function readOutboxQueueDepth(sql: Sql, engineSchema: string): Promise<number> {
-  const [row] = await sql<{ total: number }[]>`
-    SELECT COUNT(*)::int AS total
-    FROM ${sql(engineSchema)}.outbox
-    WHERE status IN ('pending', 'leased')
-  `;
-
-  return row?.total ?? 0;
-}
-
-function createMetricsPayload(queueDepth: number): string {
-  return [
-    "# HELP dpdp_outbox_queue_depth Number of relay-pending outbox rows.",
-    "# TYPE dpdp_outbox_queue_depth gauge",
-    `dpdp_outbox_queue_depth ${queueDepth}`,
-    "# HELP dpdp_dead_letters_total Total outbox events moved to dead_letter.",
-    "# TYPE dpdp_dead_letters_total counter",
-    `dpdp_dead_letters_total ${deadLettersTotal}`,
-    "# HELP dpdp_worker_quarantined Whether the worker is refusing new mutation tasks due to schema/config preflight failure.",
-    "# TYPE dpdp_worker_quarantined gauge",
-    `dpdp_worker_quarantined ${workerQuarantined ? 1 : 0}`,
-    "",
-  ].join("\n");
-}
 
 async function checkDatabaseHealth(sql: Sql): Promise<boolean> {
   try {
@@ -275,16 +249,6 @@ async function main() {
           });
         }
 
-        if (url.pathname === "/metrics") {
-          const queueDepth = await readOutboxQueueDepth(sql!, config.database.engine_schema);
-          return new Response(createMetricsPayload(queueDepth), {
-            status: 200,
-            headers: {
-              "content-type": "text/plain; version=0.0.4; charset=utf-8",
-            },
-          });
-        }
-
         return new Response("Not Found", { status: 404 });
       },
     });
@@ -317,7 +281,6 @@ async function main() {
       try {
         const processedCount = workerQuarantined ? 0 : await worker.processTaskBatch(taskConcurrency);
         const realy = await worker.flushOutbox();
-        deadLettersTotal += realy.deadLettered;
 
         if (processedCount > 0 || realy.claimed > 0) {
           emptyPolls = 0;

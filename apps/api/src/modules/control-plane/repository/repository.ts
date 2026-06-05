@@ -51,12 +51,6 @@ import {
   materializeDueLifecycleTasks,
   requeueDeadLetterTask,
 } from "./tasks";
-import { getOperationalMetricRows } from "./metrics";
-import {
-  insertUsageEvent,
-  listUsageEvents,
-  summarizeUsage,
-} from "./usage";
 import {
   authenticateApiKey,
   createApiKey,
@@ -78,11 +72,6 @@ import {
   upsertProviderCompletionTarget,
 } from "./completion";
 import {
-  getBillingSubscription,
-  insertBillingEvent,
-  upsertBillingSubscription,
-} from "./billing";
-import {
   getExternalSubjectMapping,
   upsertExternalSubjectMapping,
 } from "./integrations";
@@ -100,15 +89,12 @@ import type {
   InsertAuditLedgerEventInput,
   InsertCertificateInput,
   InsertWorkerConfigHeartbeatInput,
-  InsertUsageEventInput,
   ListErasureJobsInput,
   RepositoryContext,
   RotateClientKeyInput,
   RotateClientWebhookSecretInput,
   TaskQueueRow,
   TransitionJobFromOutboxInput,
-  UsageEventRow,
-  UsageSummaryRow,
   ApiKeyRow,
   CreateApiKeyInput,
   CreateOrganizationInput,
@@ -120,9 +106,6 @@ import type {
   WorkerConfigReleaseRow,
   ProviderCompletionTargetRow,
   UpsertProviderCompletionTargetInput,
-  BillingSubscriptionRow,
-  UpsertBillingSubscriptionInput,
-  InsertBillingEventInput,
 } from "./types";
 import type { Sql } from "@/types";
 
@@ -189,10 +172,6 @@ export class ControlPlaneRepository {
 
   async listOrganizationMembers(organizationId: string): Promise<OrganizationUserRow[]> {
     return listOrganizationMembers(this.context, organizationId);
-  }
-
-  async getOperationalMetricRows() {
-    return getOperationalMetricRows(this.context);
   }
 
   /**
@@ -721,49 +700,5 @@ export class ControlPlaneRepository {
     jobId: string
   ): Promise<Array<ProviderCompletionTargetRow & { external_reference_id: string }>> {
     return getProviderCompletionTargetsForJob(this.context, jobId);
-  }
-
-  async upsertBillingSubscription(
-    input: UpsertBillingSubscriptionInput
-  ): Promise<BillingSubscriptionRow> {
-    return upsertBillingSubscription(this.context, input);
-  }
-
-  async insertBillingEvent(input: InsertBillingEventInput): Promise<boolean> {
-    return insertBillingEvent(this.context, input);
-  }
-
-  async getBillingSubscription(organizationId: string): Promise<BillingSubscriptionRow | null> {
-    return getBillingSubscription(this.context, organizationId);
-  }
-
-  /**
-   * Appends a billable usage event idempotently.
-   *
-   * @param input - Usage event envelope.
-   * @returns `true` when inserted, `false` on billing-key replay.
-   */
-  async insertUsageEvent(input: InsertUsageEventInput): Promise<boolean> {
-    return insertUsageEvent(this.context, input);
-  }
-
-  /**
-   * Lists raw usage events.
-   *
-   * @param filters - Optional client/time filters.
-   * @returns Usage event rows.
-   */
-  async listUsageEvents(filters: { organizationId?: string; clientName?: string; since?: Date; until?: Date } = {}) {
-    return listUsageEvents(this.context, filters);
-  }
-
-  /**
-   * Aggregates usage totals by client and billable event type.
-   *
-   * @param filters - Optional client/time filters.
-   * @returns Usage summary rows.
-   */
-  async summarizeUsage(filters: { organizationId?: string; clientName?: string; since?: Date; until?: Date } = {}) {
-    return summarizeUsage(this.context, filters);
   }
 }

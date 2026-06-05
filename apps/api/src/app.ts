@@ -15,9 +15,6 @@ import { createOrgRouter } from "./modules/org/router";
 import { ControlPlaneRepository, createControlPlaneRouter, ControlPlaneService } from "./modules/control-plane";
 import { createUnifiedWebhookRouter } from "./modules/webhooks";
 import {
-  apiMetricsMiddleware,
-  recordOperationalMetricSnapshot,
-  renderApiMetrics,
   getLogger
 } from "./observability";
 import type { Sql } from "./types";
@@ -126,7 +123,6 @@ export function createApp(options: CreateAppOptions) {
 
   app.use("*", secureHeaders());
   app.use("*", requestContextMiddleware);
-  app.use("*", apiMetricsMiddleware);
   app.use("/api/v1/erasure-requests", createRateLimitMiddleware(publicRateLimiter));
   app.use("/api/v1/integrations/*", createRateLimitMiddleware(publicRateLimiter));
   app.use("/api/v1/webhooks/*", createRateLimitMiddleware(publicRateLimiter));
@@ -176,15 +172,6 @@ export function createApp(options: CreateAppOptions) {
     } catch {
       return c.json({ ok: false }, 503);
     }
-  });
-  app.get("/metrics", async () => {
-    recordOperationalMetricSnapshot(await repository.getOperationalMetricRows());
-    return new Response(await renderApiMetrics(), {
-      status: 200,
-      headers: {
-        "content-type": "text/plain; version=0.0.4; charset=utf-8",
-      },
-    });
   });
   app.route("/api/v1", createControlPlaneRouter(service));
   app.route("/api/v1/webhooks", createUnifiedWebhookRouter({

@@ -2,7 +2,6 @@ import { fail } from "@/errors";
 import { computeTokenHash, type ControlPlaneRepository } from "@modules/control-plane";
 import type {
   AdminCreateApiKeyInput,
-  AdminBillingSubscriptionInput,
   AdminAuditExportQueryInput,
   AdminApproveWorkerConfigInput,
   AdminBulkPurgeInput,
@@ -11,7 +10,6 @@ import type {
   AdminErasureRequestQueryInput,
   AdminProviderCompletionTargetInput,
   AdminRotateWebhookSecretInput,
-  AdminUsageQueryInput,
 } from "./schemas";
 
 export interface AdminTenantContext {
@@ -524,75 +522,6 @@ export class AdminService {
   }
 
   /**
-   * Aggregates usage totals for lightweight billing and operations reporting.
-   *
-   * @param query - Optional client/time filters.
-   * @returns Usage summary rows.
-   */
-  async summarizeUsage(query: AdminUsageQueryInput, tenant: AdminTenantContext) {
-    return this.repository.summarizeUsage({
-      organizationId: tenant.organizationId,
-      clientName: query.client_name,
-      since: query.since ? new Date(query.since) : undefined,
-      until: query.until ? new Date(query.until) : undefined,
-    });
-  }
-
-  /**
-   * Returns the current billing entitlement for the authenticated tenant.
-   *
-   * @param tenant - Authenticated tenant context.
-   * @returns Billing subscription row or `null` when no payment has been recorded.
-   */
-  async getBillingSubscription(tenant: AdminTenantContext) {
-    return this.repository.getBillingSubscription(tenant.organizationId);
-  }
-
-  /**
-   * Persists a reconciled billing state update and records the provider event idempotently.
-   *
-   * @param input - Provider payment/subscription state.
-   * @param tenant - Authenticated tenant context.
-   * @returns Updated tenant billing subscription.
-   */
-  async upsertBillingSubscription(input: AdminBillingSubscriptionInput, tenant: AdminTenantContext) {
-    const now = this.now();
-    if (input.provider_event_id) {
-      await this.repository.insertBillingEvent({
-        organizationId: tenant.organizationId,
-        provider: input.provider,
-        providerEventId: input.provider_event_id,
-        eventType: input.event_type,
-        payload: {
-          plan_id: input.plan_id,
-          status: input.status,
-          provider_subscription_id: input.provider_subscription_id ?? null,
-          provider_order_id: input.provider_order_id ?? null,
-          provider_payment_id: input.provider_payment_id ?? null,
-          metadata: input.metadata,
-        },
-        now,
-      });
-    }
-
-    return this.repository.upsertBillingSubscription({
-      organizationId: tenant.organizationId,
-      planId: input.plan_id,
-      provider: input.provider,
-      status: input.status,
-      providerSubscriptionId: input.provider_subscription_id ?? null,
-      providerOrderId: input.provider_order_id ?? null,
-      providerPaymentId: input.provider_payment_id ?? null,
-      currentPeriodStart: input.current_period_start ? new Date(input.current_period_start) : null,
-      currentPeriodEnd: input.current_period_end ? new Date(input.current_period_end) : null,
-      cancelAtPeriodEnd: input.cancel_at_period_end,
-      lastEventId: input.provider_event_id ?? null,
-      metadata: input.metadata,
-      now,
-    });
-  }
-
-  /**
    * Exports ordered audit ledger rows for archival and external WORM replication.
    *
    * @param query - Optional client/sequence filters.
@@ -648,8 +577,7 @@ export class AdminService {
     const now = this.now();
     const organization = await this.repository.createOrganization({
       name: input.name,
-      billingPlan: input.billing_plan,
-      certificateArchiveRetentionDays: input.certificate_archive_retention_days,
+      certificate_archive_retention_days: input.certificate_archive_retention_days,
       ownerEmail: input.owner_email,
       now,
     });

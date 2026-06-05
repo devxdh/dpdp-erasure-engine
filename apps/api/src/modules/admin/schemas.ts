@@ -73,23 +73,6 @@ export const adminProviderCompletionTargetSchema = z
     }
   });
 
-export const adminBillingSubscriptionSchema = z
-  .object({
-    plan_id: z.string().trim().min(1),
-    provider: z.string().trim().min(1).default("razorpay"),
-    status: z.enum(["TRIALING", "ACTIVE", "PAST_DUE", "CANCELLED", "EXPIRED"]),
-    provider_subscription_id: z.string().trim().min(1).optional(),
-    provider_order_id: z.string().trim().min(1).optional(),
-    provider_payment_id: z.string().trim().min(1).optional(),
-    current_period_start: z.iso.datetime({ offset: true }).optional(),
-    current_period_end: z.iso.datetime({ offset: true }).optional(),
-    cancel_at_period_end: z.boolean().default(false),
-    provider_event_id: z.string().trim().min(1).optional(),
-    event_type: z.string().trim().min(1).default("billing.subscription.updated"),
-    metadata: z.record(z.string(), z.unknown()).default({}),
-  })
-  .strict();
-
 export const adminCreateApiKeySchema = z
   .object({
     label: z.string().trim().min(1),
@@ -100,7 +83,6 @@ export const adminCreateApiKeySchema = z
 export const adminCreateOrganizationSchema = z
   .object({
     name: z.string().trim().min(1),
-    billing_plan: z.string().trim().min(1).default("pilot"),
     certificate_archive_retention_days: z.number().int().min(1).max(3650).default(365),
     owner_email: z.email().optional(),
   })
@@ -121,14 +103,6 @@ export const adminTaskIdParamSchema = z
 export const adminRequestIdParamSchema = z
   .object({
     requestId: z.uuid(),
-  })
-  .strict();
-
-export const adminUsageQuerySchema = z
-  .object({
-    client_name: z.string().trim().min(1).optional(),
-    since: z.iso.datetime({ offset: true }).optional(),
-    until: z.iso.datetime({ offset: true }).optional(),
   })
   .strict();
 
@@ -177,10 +151,8 @@ export type AdminCreateClientInput = z.infer<typeof adminCreateClientSchema>;
 export type AdminApproveWorkerConfigInput = z.infer<typeof adminApproveWorkerConfigSchema>;
 export type AdminRotateWebhookSecretInput = z.infer<typeof adminRotateWebhookSecretSchema>;
 export type AdminProviderCompletionTargetInput = z.infer<typeof adminProviderCompletionTargetSchema>;
-export type AdminBillingSubscriptionInput = z.infer<typeof adminBillingSubscriptionSchema>;
 export type AdminCreateApiKeyInput = z.infer<typeof adminCreateApiKeySchema>;
 export type AdminCreateOrganizationInput = z.infer<typeof adminCreateOrganizationSchema>;
-export type AdminUsageQueryInput = z.infer<typeof adminUsageQuerySchema>;
 export type AdminAuditExportQueryInput = z.infer<typeof adminAuditExportQuerySchema>;
 export type AdminErasureRequestQueryInput = z.infer<typeof adminErasureRequestQuerySchema>;
 export type AdminBulkPurgeInput = z.infer<typeof adminBulkPurgeSchema>;

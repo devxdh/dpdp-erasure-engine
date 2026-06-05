@@ -413,23 +413,6 @@ describe("Control Plane Admin (Integration)", () => {
     });
     expect(outboxResponse.status).toBe(202);
 
-    const usageResponse = await app.request("/api/v1/admin/usage", {
-      headers: {
-        authorization: "Bearer admin-secret",
-      },
-    });
-    expect(usageResponse.status).toBe(200);
-    expect(await usageResponse.json()).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          client_name: "worker-1",
-          event_type: "USER_VAULTED",
-          total_units: 1,
-          event_count: 1,
-        }),
-      ])
-    );
-
     const exportResponse = await app.request("/api/v1/admin/audit/export", {
       headers: {
         authorization: "Bearer admin-secret",
@@ -466,17 +449,6 @@ describe("Control Plane Admin (Integration)", () => {
     );
   });
 
-  it("exposes prometheus metrics for request accounting", async () => {
-    const { app, workerId } = await setup();
-
-    await app.request("/health");
-    const metricsResponse = await app.request("/metrics");
-    expect(metricsResponse.status).toBe(200);
-    const metrics = await metricsResponse.text();
-    expect(metrics).toContain("dpdp_api_http_requests_total");
-    expect(metrics).toContain("dpdp_api_http_request_duration_seconds");
-  });
-
   it("isolates erasure jobs by organization and enforces API key scopes", async () => {
     const { app } = await setup();
 
@@ -485,7 +457,6 @@ describe("Control Plane Admin (Integration)", () => {
       headers: adminHeaders(),
       body: JSON.stringify({
         name: "tenant-isolated",
-        billing_plan: "pilot",
         owner_email: "owner@tenant.example",
       }),
     });

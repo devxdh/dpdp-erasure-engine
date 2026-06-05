@@ -27,7 +27,7 @@ import { finalizeTerminalOutboxEvent, isTerminalEventType } from "./terminal";
 import type { ServiceOptions } from "./types";
 import { assertSafeWebhookUrl, assertSafeWebhookDispatchTarget } from "../webhook";
 import { PdfCertificateGenerator, type ProofOfErasureData } from "./pdf-generator";
-import { recordUsageEvent, recordWorkerOutboxEvent, getLogger } from "@/observability";
+import { recordWorkerOutboxEvent, getLogger } from "@/observability";
 import { s3PutObject } from "@/utils";
 import { verifyHmacSha256Hex } from "@/crypto";
 import { normalizeProviderSubjectLookup } from "@modules/webhooks";
@@ -708,20 +708,7 @@ export class ControlPlaneService {
     if (existingEvent) {
       if (isReplayEquivalent(existingEvent, input, clientId)) {
         await this.applyOutboxLifecycle(job, input, now);
-        const usageInserted = await this.repository.insertUsageEvent({
-          billingKey: `outbox:${input.idempotency_key}`,
-          organizationId: job.organization_id,
-          clientId,
-          erasureJobId: job.id,
-          eventType: input.event_type,
-          units: 1,
-          metadata: {
-            replay: true,
-          },
-          occurredAt: now,
-        });
         recordWorkerOutboxEvent(input.event_type, "replay");
-        recordUsageEvent(input.event_type, usageInserted ? "inserted" : "replay");
         return { accepted: true as const, idempotent_replay: true as const };
       }
 
@@ -791,20 +778,7 @@ export class ControlPlaneService {
       );
       if (racedEvent && isReplayEquivalent(racedEvent, input, clientId)) {
         await this.applyOutboxLifecycle(job, input, now);
-        const usageInserted = await this.repository.insertUsageEvent({
-          billingKey: `outbox:${input.idempotency_key}`,
-          organizationId: job.organization_id,
-          clientId,
-          erasureJobId: job.id,
-          eventType: input.event_type,
-          units: 1,
-          metadata: {
-            replay: true,
-          },
-          occurredAt: now,
-        });
         recordWorkerOutboxEvent(input.event_type, "replay");
-        recordUsageEvent(input.event_type, usageInserted ? "inserted" : "replay");
         return { accepted: true as const, idempotent_replay: true as const };
       }
 
@@ -819,22 +793,7 @@ export class ControlPlaneService {
     }
 
     await this.applyOutboxLifecycle(job, input, now);
-    const usageInserted = await this.repository.insertUsageEvent({
-      billingKey: `outbox:${input.idempotency_key}`,
-      organizationId: job.organization_id,
-      clientId,
-      erasureJobId: job.id,
-      eventType: input.event_type,
-      units: 1,
-      metadata: {
-        current_hash: ledgerCurrentHash,
-        worker_current_hash: input.current_hash,
-        chain_rebased: input.previous_hash !== ledgerPreviousHash,
-      },
-      occurredAt: now,
-    });
     recordWorkerOutboxEvent(input.event_type, "accepted");
-    recordUsageEvent(input.event_type, usageInserted ? "inserted" : "replay");
 
     return { accepted: true as const, idempotent_replay: false as const };
   }

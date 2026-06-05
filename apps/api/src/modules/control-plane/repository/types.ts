@@ -6,19 +6,11 @@ import type {
   OutboxEventType,
 } from "../schema";
 import type {
-  BillingSubscriptionRow,
-  InsertBillingEventInput,
-  UpsertBillingSubscriptionInput,
-} from "./billing";
-import type {
   ProviderCompletionTargetRow,
   UpsertProviderCompletionTargetInput,
 } from "./completion";
 
 export type {
-  BillingSubscriptionRow,
-  InsertBillingEventInput,
-  UpsertBillingSubscriptionInput,
   ProviderCompletionTargetRow,
   UpsertProviderCompletionTargetInput,
 };
@@ -165,34 +157,6 @@ export interface AuditLedgerVerificationResult {
     actual_current_hash: string;
     reason: "previous_hash_mismatch" | "current_hash_mismatch" | "heartbeat_mismatch";
   } | null;
-}
-
-/**
- * Immutable usage/billing record derived from billable Control Plane events.
- */
-export interface UsageEventRow {
-  id: string;
-  billing_key: string;
-  organization_id: string;
-  client_id: string;
-  erasure_job_id: string | null;
-  audit_ledger_id: string | null;
-  event_type: string;
-  units: number;
-  metadata: Record<string, unknown>;
-  occurred_at: Date;
-  created_at: Date;
-}
-
-/**
- * Aggregated usage summary grouped by client and billable event type.
- */
-export interface UsageSummaryRow {
-  organization_id: string;
-  client_name: string;
-  event_type: string;
-  total_units: number;
-  event_count: number;
 }
 
 /**
@@ -357,23 +321,9 @@ export interface InsertCertificateInput {
 }
 
 /**
- * Input required to append a billable usage event.
- */
-export interface InsertUsageEventInput {
-  billingKey: string;
-  organizationId: string;
-  clientId: string;
-  erasureJobId?: string | null;
-  auditLedgerId?: string | null;
-  eventType: string;
-  units: number;
-  metadata: Record<string, unknown>;
-  occurredAt: Date;
-}
-
-/**
  * Operator filters for listing erasure lifecycle aggregates.
  */
+
 export interface ListErasureJobsInput {
   organizationId?: string;
   status?: ErasureRequestStatus;
@@ -401,7 +351,6 @@ export interface TransitionJobFromOutboxInput {
 export interface OrganizationRow {
   id: string;
   name: string;
-  billing_plan: string;
   certificate_archive_retention_days: number;
   created_at: Date;
 }
@@ -467,12 +416,12 @@ export interface ExternalSubjectMappingRow {
 
 export interface CreateOrganizationInput {
   name: string;
-  billingPlan: string;
-  certificateArchiveRetentionDays?: number;
+  certificate_archive_retention_days?: number;
   ownerEmail?: string;
   oidcProviderId?: string;
   now: Date;
 }
+
 
 export interface ApproveWorkerConfigReleaseInput {
   organizationId: string;

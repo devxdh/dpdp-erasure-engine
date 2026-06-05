@@ -10,14 +10,12 @@ import {
   adminCreateApiKeySchema,
   adminCreateClientSchema,
   adminCreateOrganizationSchema,
-  adminBillingSubscriptionSchema,
   adminErasureRequestQuerySchema,
   adminProviderCompletionTargetSchema,
   adminProviderParamSchema,
   adminRotateWebhookSecretSchema,
   adminRequestIdParamSchema,
   adminTaskIdParamSchema,
-  adminUsageQuerySchema,
   adminWorkerConfigHashParamSchema,
 } from "./schemas";
 import type { AdminService } from "./service";
@@ -172,26 +170,6 @@ export function createAdminRouter(service: AdminService) {
     "/purge-runs",
     zValidator("json", adminBulkPurgeSchema, validationHook("json")),
     async (c) => c.json(await service.createBulkPurge(c.req.valid("json"), requireTenantContext(c)), 202)
-  );
-
-  router.get(
-    "/usage",
-    zValidator("query", adminUsageQuerySchema, validationHook("query")),
-    async (c) => c.json(await service.summarizeUsage(c.req.valid("query"), requireTenantContext(c)), 200)
-  );
-
-  router.get("/billing/subscription", async (c) =>
-    c.json(await service.getBillingSubscription(requireTenantContext(c)), 200)
-  );
-
-  router.put(
-    "/billing/subscription",
-    zValidator("json", adminBillingSubscriptionSchema, validationHook("json")),
-    async (c) =>
-      c.json(
-        await service.upsertBillingSubscription(c.req.valid("json"), requireTenantContext(c)),
-        200
-      )
   );
 
   router.get(

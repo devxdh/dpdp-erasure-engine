@@ -22,14 +22,12 @@ export async function createOrganization(
     const [organization] = await tx<OrganizationRow[]>`
       INSERT INTO ${tx(context.schema)}.organizations (
         name,
-        billing_plan,
         certificate_archive_retention_days,
         created_at
       )
       VALUES (
         ${input.name},
-        ${input.billingPlan},
-        ${input.certificateArchiveRetentionDays ?? 365},
+        ${input.certificate_archive_retention_days ?? 365},
         ${input.now}
       )
       RETURNING *
@@ -88,8 +86,8 @@ export async function ensureBootstrapOrganization(
   context: RepositoryContext
 ): Promise<OrganizationRow> {
   const [organization] = await context.sql<OrganizationRow[]>`
-    INSERT INTO ${context.sql(context.schema)}.organizations (name, billing_plan)
-    VALUES ('bootstrap', 'internal')
+    INSERT INTO ${context.sql(context.schema)}.organizations (name)
+    VALUES ('bootstrap')
     ON CONFLICT (name) DO UPDATE
       SET name = EXCLUDED.name
     RETURNING *

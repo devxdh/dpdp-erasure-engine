@@ -29,7 +29,6 @@ export async function migrateApiSchema(sql: postgres.Sql, controlSchema: string 
       CREATE TABLE IF NOT EXISTS ${tx(safeSchema)}.organizations (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name TEXT NOT NULL UNIQUE,
-        billing_plan TEXT NOT NULL DEFAULT 'pilot',
         certificate_archive_retention_days INTEGER NOT NULL DEFAULT 365,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
@@ -148,8 +147,8 @@ export async function migrateApiSchema(sql: postgres.Sql, controlSchema: string 
     `;
 
     await tx`
-      INSERT INTO ${tx(safeSchema)}.organizations (id, name, billing_plan)
-      VALUES ('00000000-0000-0000-0000-000000000001'::uuid, 'bootstrap', 'internal')
+      INSERT INTO ${tx(safeSchema)}.organizations (id, name)
+      VALUES ('00000000-0000-0000-0000-000000000001'::uuid, 'bootstrap')
       ON CONFLICT (name) DO NOTHING
     `;
 
@@ -629,84 +628,6 @@ export async function migrateApiSchema(sql: postgres.Sql, controlSchema: string 
       ON ${tx(safeSchema)}.webhook_outbox (job_id, url)
     `;
 
-    await tx`
-      CREATE TABLE IF NOT EXISTS ${tx(safeSchema)}.usage_events (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        billing_key TEXT NOT NULL UNIQUE,
-        organization_id UUID REFERENCES ${tx(safeSchema)}.organizations(id) ON DELETE CASCADE,
-        client_id UUID NOT NULL REFERENCES ${tx(safeSchema)}.clients(id) ON DELETE CASCADE,
-        erasure_job_id UUID REFERENCES ${tx(safeSchema)}.erasure_jobs(id) ON DELETE SET NULL,
-        audit_ledger_id UUID REFERENCES ${tx(safeSchema)}.audit_ledger(id) ON DELETE SET NULL,
-        event_type TEXT NOT NULL,
-        units INTEGER NOT NULL,
-        metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
-        occurred_at TIMESTAMPTZ NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `;
-
-    await tx`
-      ALTER TABLE ${tx(safeSchema)}.usage_events
-      ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES ${tx(safeSchema)}.organizations(id) ON DELETE CASCADE
-    `;
-
-    await tx`
-      CREATE TABLE IF NOT EXISTS ${tx(safeSchema)}.billing_subscriptions (
-        organization_id UUID PRIMARY KEY REFERENCES ${tx(safeSchema)}.organizations(id) ON DELETE CASCADE,
-        plan_id TEXT NOT NULL,
-        provider TEXT NOT NULL,
-        provider_subscription_id TEXT,
-        provider_order_id TEXT,
-        provider_payment_id TEXT,
-        status TEXT NOT NULL,
-        current_period_start TIMESTAMPTZ,
-        current_period_end TIMESTAMPTZ,
-        cancel_at_period_end BOOLEAN NOT NULL DEFAULT FALSE,
-        last_event_id TEXT,
-        metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT billing_subscriptions_status_check
-          CHECK (status IN ('TRIALING', 'ACTIVE', 'PAST_DUE', 'CANCELLED', 'EXPIRED'))
-      )
-    `;
-
-    await tx`
-      CREATE TABLE IF NOT EXISTS ${tx(safeSchema)}.billing_events (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        organization_id UUID NOT NULL REFERENCES ${tx(safeSchema)}.organizations(id) ON DELETE CASCADE,
-        provider TEXT NOT NULL,
-        provider_event_id TEXT NOT NULL,
-        event_type TEXT NOT NULL,
-        payload JSONB NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        UNIQUE (organization_id, provider, provider_event_id)
-      )
-    `;
-
-    await tx`
-      CREATE INDEX IF NOT EXISTS billing_events_org_created_idx
-      ON ${tx(safeSchema)}.billing_events (organization_id, created_at DESC)
-    `;
-
-    await tx`
-      UPDATE ${tx(safeSchema)}.usage_events AS ue
-      SET organization_id = c.organization_id
-      FROM ${tx(safeSchema)}.clients AS c
-      WHERE ue.client_id = c.id
-        AND ue.organization_id IS NULL
-    `;
-
-    await tx`
-      ALTER TABLE ${tx(safeSchema)}.usage_events
-      ALTER COLUMN organization_id SET NOT NULL
-    `;
-
-    await tx`
-      ALTER TABLE ${tx(safeSchema)}.usage_events
-      ALTER COLUMN organization_id SET DEFAULT '00000000-0000-0000-0000-000000000001'::uuid
-    `;
-
     await tx`ALTER TABLE ${tx(safeSchema)}.erasure_jobs DROP CONSTRAINT IF EXISTS erasure_jobs_idempotency_key_key`;
     await tx`DROP INDEX IF EXISTS ${tx(safeSchema)}.erasure_jobs_idempotency_key_idx`;
     await tx`
@@ -838,16 +759,6 @@ export async function migrateApiSchema(sql: postgres.Sql, controlSchema: string 
     await tx`
       CREATE INDEX IF NOT EXISTS clients_active_name_idx
       ON ${tx(safeSchema)}.clients (organization_id, is_active, name)
-    `;
-
-    await tx`
-      CREATE INDEX IF NOT EXISTS usage_events_client_occurred_idx
-      ON ${tx(safeSchema)}.usage_events (organization_id, client_id, occurred_at DESC)
-    `;
-
-    await tx`
-      CREATE INDEX IF NOT EXISTS usage_events_event_type_idx
-      ON ${tx(safeSchema)}.usage_events (event_type, occurred_at DESC)
     `;
 
     await tx`
