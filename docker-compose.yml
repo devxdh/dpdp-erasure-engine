@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:17.7-alpine
+    environment:
+      POSTGRES_DB: dpdp_local
+      POSTGRES_USER: dpdp
+      POSTGRES_PASSWORD: dpdp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dpdp -d dpdp_local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      ALLOW_LOCAL_DEV: "true"
+      PORT: 3000
+      DATABASE_URL: postgres://dpdp:dpdp@postgres:5432/dpdp_local
+      API_CONTROL_SCHEMA: dpdp_control
+      WORKER_CLIENT_NAME: worker-1
+      WORKER_SHARED_SECRET: worker-secret
+      WORKER_REQUEST_SIGNING_SECRET: request-signing-secret
+      ADMIN_API_TOKEN: admin-secret
+      SHADOW_BURN_IN_REQUIRED: "false"
+    ports:
+      - "13000:3000"
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/bun", "-e", "fetch('http://127.0.0.1:3000/ready').then(r => process.exit(r.ok ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    environment:
+      LOG_LEVEL: info
+      DATABASE_URL: postgres://dpdp:dpdp@postgres:5432/dpdp_local
+      API_CLIENT_ID: worker-1
+      API_WORKER_TOKEN: worker-secret
+      API_REQUEST_SIGNING_SECRET: request-signing-secret
+      API_SYNC_URL: http://api:3000/api/v1/worker/sync
+      API_BASE_URL: http://api:3000/api/v1/worker/tasks
+      API_OUTBOX_URL: http://api:3000/api/v1/worker/outbox
+      METRICS_PORT: 9464
+      # Development keys
+      DPDP_MASTER_KEY: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+      DPDP_HMAC_KEY: 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff
+    ports:
+      - "19464:9464"
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/bun", "-e", "fetch('http://127.0.0.1:9464/readyz').then(r => process.exit(r.ok ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
