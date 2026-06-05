@@ -117,7 +117,7 @@ export async function ingestWebhookTransaction(
         fail({
           code: "API_WEBHOOK_SUBJECT_MAPPING_NOT_FOUND",
           title: "Webhook subject mapping not found",
-          detail: "The provider subject id has not been mapped to an Avantii opaque subject id.",
+          detail: "The provider subject id has not been mapped to an opaque subject id.",
           status: 404,
           category: "validation",
           retryable: false,

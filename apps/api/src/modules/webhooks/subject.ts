@@ -20,7 +20,7 @@ export interface ProviderSubjectLookup {
 }
 
 /**
- * Converts a provider-local subject reference into the zero-PII lookup key used by Avantii.
+ * Converts a provider-local subject reference into the zero-PII lookup key used by Api.
  *
  * Opaque provider ids pass through unchanged for backward compatibility. Email and phone
  * references are accepted only as transient webhook/mapping inputs and are immediately
