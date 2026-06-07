@@ -33,7 +33,8 @@
       "name": "scripts",
       "dependencies": {
         "@engine/api": "workspace:*",
-        "@engine/worker": "workspace:*",
+        "dpdp-erasure-cli": "workspace:*",
+        "pdf-lib": "^1.17.1",
         "postgres": "^3.4.9",
       },
       "devDependencies": {
@@ -44,8 +45,11 @@
       },
     },
     "apps/worker": {
-      "name": "@engine/worker",
+      "name": "dpdp-erasure-cli",
       "version": "1.0.0",
+      "bin": {
+        "dpdp-cli": "./src/modules/cli/index.ts",
+      },
       "dependencies": {
         "@inquirer/prompts": "^8.5.2",
         "boxen": "^8.0.1",
@@ -80,8 +84,6 @@
     "@emnapi/wasi-threads": ["@emnapi/wasi-threads@1.2.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w=="],
 
     "@engine/api": ["@engine/api@workspace:apps/api"],
-
-    "@engine/worker": ["@engine/worker@workspace:apps/worker"],
 
     "@hono/zod-validator": ["@hono/zod-validator@0.8.0", "", { "peerDependencies": { "hono": ">=4.10.0", "zod": "^3.25.0 || ^4.0.0" } }, "sha512-5uS4S1/LKtZQYvD4BtpPUFkOv8d1wNxHHrChm26buMiEYc1FrHWvDUaKVBwkiVtvSExHSpLGDvcnpI2Copyj9w=="],
 
@@ -238,6 +240,8 @@
     "convert-source-map": ["convert-source-map@2.0.0", "", {}, "sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg=="],
 
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
+
+    "dpdp-erasure-cli": ["dpdp-erasure-cli@workspace:apps/worker"],
 
     "emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
 

@@ -1,9 +1,14 @@
 {
-  "name": "@engine/worker",
+  "name": "dpdp-erasure-cli",
   "version": "1.0.0",
   "module": "index.ts",
   "type": "module",
-  "private": true,
+  "bin": {
+    "dpdp-cli": "./src/modules/cli/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "bun src/index.ts",
     "typecheck": "tsc --noEmit",

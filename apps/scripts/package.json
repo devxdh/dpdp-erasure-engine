@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@engine/api": "workspace:*",
-    "@engine/worker": "workspace:*",
+    "dpdp-erasure-cli": "workspace:*",
+    "pdf-lib": "^1.17.1",
     "postgres": "^3.4.9"
   }
 }

@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { detectSchemaDrift } from "@engine/worker/src/modules/db";
+import { detectSchemaDrift } from "dpdp-erasure-cli/src/modules/db";
 import postgres from "postgres";
 
 const templatePath = resolve("deploy/local/compliance.worker.template.yml");

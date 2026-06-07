@@ -66,7 +66,7 @@ curl -X POST http://localhost:13000/api/v1/erasure-requests \
   -H "Content-Type: application/json" \
   -d '{
     "subject_opaque_id": "usr_purge_000001",
-    "idempotency_key": "unique-uuid-key-here",
+    "idempotency_key": "123e4567-e89b-12d3-a456-426614174000",
     "trigger_source": "USER_CONSENT_WITHDRAWAL",
     "actor_opaque_id": "usr_purge_000001",
     "legal_framework": "DPDP_2023",
@@ -147,6 +147,14 @@ Automated database scanning is a starting point, not a guarantee. Professional d
 - **Implicit Logical Links**: The introspector compiles the table relationship graph based on database foreign key constraints. If your application joins tables in-code without database-level constraints, the introspector will not detect them. You must review the `potentialLogicalLinks` output and manually add them as `satellite_targets` in `compliance.worker.yml`.
 - **Dynamic JSON/Document Fields**: PII nested inside JSON or text log columns can be missed if they do not match sample thresholds. Ensure these columns are manually specified.
 - **DPO Manifest Verification**: A Data Protection Officer (DPO) must audit the generated `compliance.worker.yml` to confirm that all required PII fields are mapped and that legal holds are correctly declared before signing.
+
+---
+
+## 6. Comprehensive Documentation
+
+For detailed internal mechanics, architecture guides, and help integrating this engine with **Zendesk, OneTrust, or Jira**, please refer to our master documentation index:
+
+👉 **[View the Complete Documentation Index (apps/docs)](apps/docs/README.md)**
 
 ---
 

@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { bytesToBase64, base64ToBytes } from "@engine/worker/src/lib";
+import { bytesToBase64, base64ToBytes } from "dpdp-erasure-cli/src/lib";
 
 function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
   const copy = new Uint8Array(bytes.length);

@@ -1,8 +1,8 @@
 import postgres from "postgres";
-import { detectSchemaDrift } from "@engine/worker/src/modules/db";
-import { runIntrospector } from "@engine/worker/src/modules/introspector";
-import { sha256HexDigest } from "@engine/worker/src/lib/crypto";
-import { selectPurgeCandidates } from "@engine/worker/src/modules/engine/vault/purge";
+import { detectSchemaDrift } from "dpdp-erasure-cli/src/modules/db";
+import { runIntrospector } from "dpdp-erasure-cli/src/modules/introspector";
+import { sha256HexDigest } from "dpdp-erasure-cli/src/lib/crypto";
+import { selectPurgeCandidates } from "dpdp-erasure-cli/src/modules/engine/vault/purge";
 import { computeWormHash } from "@engine/api/src/modules/control-plane/hash";
 
 const composeArgs = ["compose", "-f", "docker-compose.yml"];
