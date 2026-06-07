@@ -152,4 +152,4 @@ Automated database scanning is a starting point, not a guarantee. Professional d
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Aparche 2.0 - see the [LICENSE](LICENSE) file for details.
