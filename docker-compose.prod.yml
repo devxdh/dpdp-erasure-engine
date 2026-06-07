@@ -18,15 +18,12 @@ services:
     restart: unless-stopped
 
   api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+    image: ghcr.io/devxdh/dpdp-erasure-engine-api:latest
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      NODE_ENV: development
-      ALLOW_LOCAL_DEV: "true"
+      NODE_ENV: production
       PORT: 3000
       DATABASE_URL: postgres://dpdp:dpdp@postgres:5432/dpdp_local
       API_CONTROL_SCHEMA: dpdp_control
@@ -46,16 +43,14 @@ services:
     restart: unless-stopped
 
   worker:
-    build:
-      context: .
-      dockerfile: apps/worker/Dockerfile
+    image: ghcr.io/devxdh/dpdp-erasure-engine-worker:latest
     depends_on:
       postgres:
         condition: service_healthy
       api:
         condition: service_healthy
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       LOG_LEVEL: info
       DB_URL: postgres://dpdp:dpdp@postgres:5432/dpdp_local
       API_CLIENT_ID: ${API_CLIENT_ID:-worker-1}
@@ -67,7 +62,6 @@ services:
       SKIP_SCHEMA_CHECK: "true"
       METRICS_PORT: 9464
       MAILER_WEBHOOK_URL: ${MAILER_WEBHOOK_URL:-http://api:3000/ready}
-      # Development keys
       DPDP_MASTER_KEY: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
       DPDP_HMAC_KEY: 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff
     ports:

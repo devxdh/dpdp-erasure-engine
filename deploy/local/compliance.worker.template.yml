@@ -1,0 +1,56 @@
+version: "1.0"
+database:
+  app_schema: "mock_app"
+  engine_schema: "dpdp_engine"
+
+compliance_policy:
+  default_retention_years: 1
+  notice_window_hours: 48
+  retention_rules: []
+
+graph:
+  root_table: "users"
+  root_id_column: "id"
+  max_depth: 32
+  notice_email_column: "email"
+  notice_name_column: "full_name"
+  root_pii_columns:
+    email: "HMAC"
+    full_name: "STATIC_MASK"
+
+rules:
+  - id: "default_dag"
+    root_table: "mock_app.users"
+    max_depth: 32
+    targets:
+      - table: "mock_app.users"
+        primary_key_columns: ["id"]
+        pii_columns: []
+
+satellite_targets: []
+blob_targets: []
+
+purge_policy:
+  enabled: false
+
+outbox:
+  batch_size: 25
+  lease_seconds: 60
+  max_attempts: 10
+  base_backoff_ms: 250
+
+security:
+  notification_lease_seconds: 120
+  master_key_env: "DPDP_MASTER_KEY"
+  hmac_key_env: "DPDP_HMAC_KEY"
+
+integrity:
+  expected_schema_hash: "__EXPECTED_SCHEMA_HASH__"
+
+legal_attestation:
+  dpo_identifier: "local-dev-dpo@example.com"
+  configuration_version: "local-v1"
+  legal_review_date: "2026-06-05"
+  schema_hash: "__EXPECTED_SCHEMA_HASH__"
+  generated_by: "local-e2e-setup"
+  acknowledgment: "I confirm this is a local development configuration."

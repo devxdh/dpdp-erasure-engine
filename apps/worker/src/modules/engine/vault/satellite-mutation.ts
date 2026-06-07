@@ -1,5 +1,6 @@
 import type { Tsql } from "@/types";
 import { fail } from "@/errors";
+import { quoteQualifiedIdentifier } from "@/utils";
 import { generateHMACWithKey } from "@modules/crypto";
 import type { SatelliteTarget } from "@modules/config";
 import { normalizeRootRowValue, type RootMutationContext } from "./context";
@@ -91,6 +92,20 @@ async function mutateSatelliteTarget(
       action: target.action,
       affectedRows: 0,
     };
+  }
+
+  const tableCheck = quoteQualifiedIdentifier(appSchema, target.table);
+  const colCheck = await tx.unsafe(`SELECT * FROM ${tableCheck} LIMIT 0`);
+  const existingCols = new Set((colCheck.columns ?? []).map((c) => c.name));
+  if (!existingCols.has(target.lookup_column)) {
+    fail({
+      code: "SATELLITE_COLUMN_MISSING",
+      title: "Satellite lookup column missing from database schema",
+      detail: `Lookup column "${target.lookup_column}" does not exist in target table "${appSchema}.${target.table}".`,
+      category: "database",
+      retryable: false,
+      fatal: false,
+    });
   }
 
   if (target.action === "redact") {

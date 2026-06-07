@@ -1,0 +1,483 @@
+{
+  "draft": {
+    "root": {
+      "schema": "mock_app",
+      "table": "users"
+    },
+    "maxDepth": 32,
+    "generatedAt": "2026-05-12T00:00:00.000Z",
+    "schemaHash": "fca9f1ef81ad9518d4335395035f13b76315055834316b0ee6484beb23996eea",
+    "targets": [
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "users"
+        },
+        "parentTable": null,
+        "fkCondition": "ROOT",
+        "childColumns": [],
+        "parentColumns": [],
+        "depth": 0,
+        "piiColumns": [
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "users"
+            },
+            "column": "email",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.95,
+            "sampleSize": 250,
+            "matchedSignatures": [
+              "email"
+            ]
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "account_hierarchy"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "users"
+        },
+        "fkCondition": "mock_app.users.id = mock_app.account_hierarchy.user_id",
+        "childColumns": [
+          "user_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 1,
+        "piiColumns": []
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "payment_methods"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "users"
+        },
+        "fkCondition": "mock_app.users.id = mock_app.payment_methods.user_id",
+        "childColumns": [
+          "user_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 1,
+        "piiColumns": [
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "payment_methods"
+            },
+            "column": "pan_token",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 0.10227272727272728,
+            "confidence": 0.92,
+            "sampleSize": 176,
+            "matchedSignatures": [
+              "credit_card"
+            ]
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "pii_probe_documents"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "users"
+        },
+        "fkCondition": "mock_app.users.id = mock_app.pii_probe_documents.user_id",
+        "childColumns": [
+          "user_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 1,
+        "piiColumns": [
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "aadhaar_number",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.98,
+            "sampleSize": 250,
+            "matchedSignatures": [
+              "aadhaar"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "pan_number",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.96,
+            "sampleSize": 216,
+            "matchedSignatures": [
+              "pan"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "credit_card_number",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.97,
+            "sampleSize": 216,
+            "matchedSignatures": [
+              "credit_card"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "upi_id",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.93,
+            "sampleSize": 144,
+            "matchedSignatures": [
+              "upi"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "indian_mobile",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.92,
+            "sampleSize": 192,
+            "matchedSignatures": [
+              "indian_mobile"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "passport_number",
+            "dataType": "text",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.92,
+            "sampleSize": 48,
+            "matchedSignatures": [
+              "indian_passport"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "ip_address",
+            "dataType": "text",
+            "metadataScore": 0.82,
+            "contentMatchRatio": 1,
+            "confidence": 0.82,
+            "sampleSize": 192,
+            "matchedSignatures": [
+              "ipv4"
+            ]
+          },
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "pii_probe_documents"
+            },
+            "column": "nested_payload",
+            "dataType": "jsonb",
+            "metadataScore": 0.92,
+            "contentMatchRatio": 1,
+            "confidence": 0.98,
+            "sampleSize": 72,
+            "matchedSignatures": [
+              "aadhaar",
+              "email",
+              "indian_mobile",
+              "json_path:contact.email",
+              "json_path:contact.mobile",
+              "json_path:identity.aadhaar",
+              "json_path:identity.pan",
+              "pan"
+            ]
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "profiles"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "users"
+        },
+        "fkCondition": "mock_app.users.id = mock_app.profiles.user_id",
+        "childColumns": [
+          "user_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 1,
+        "piiColumns": []
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "support_tickets"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "users"
+        },
+        "fkCondition": "mock_app.users.id = mock_app.support_tickets.requester_id",
+        "childColumns": [
+          "requester_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 1,
+        "piiColumns": []
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "profile_devices"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "profiles"
+        },
+        "fkCondition": "mock_app.profiles.id = mock_app.profile_devices.profile_id",
+        "childColumns": [
+          "profile_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 2,
+        "piiColumns": [
+          {
+            "table": {
+              "schema": "mock_app",
+              "table": "profile_devices"
+            },
+            "column": "ip_address",
+            "dataType": "text",
+            "metadataScore": 0.82,
+            "contentMatchRatio": 1,
+            "confidence": 0.82,
+            "sampleSize": 194,
+            "matchedSignatures": [
+              "ipv4"
+            ]
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "mock_app",
+          "table": "support_comments"
+        },
+        "parentTable": {
+          "schema": "mock_app",
+          "table": "support_tickets"
+        },
+        "fkCondition": "mock_app.support_tickets.id = mock_app.support_comments.ticket_id",
+        "childColumns": [
+          "ticket_id"
+        ],
+        "parentColumns": [
+          "id"
+        ],
+        "depth": 2,
+        "piiColumns": []
+      }
+    ],
+    "potentialLogicalLinks": [
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "account_hierarchy"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "logical_user_notes"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "account_hierarchy"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "payment_methods"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "account_hierarchy"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "pii_probe_documents"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "account_hierarchy"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "profiles"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "logical_user_notes"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "payment_methods"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "logical_user_notes"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "pii_probe_documents"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "logical_user_notes"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "profiles"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "payment_methods"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "pii_probe_documents"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "payment_methods"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "profiles"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      },
+      {
+        "sourceTable": {
+          "schema": "mock_app",
+          "table": "pii_probe_documents"
+        },
+        "targetTable": {
+          "schema": "mock_app",
+          "table": "profiles"
+        },
+        "column": "user_id",
+        "reason": "Both tables expose user_id but no physical foreign key was found."
+      }
+    ]
+  },
+  "report": {
+    "physicalDag": {
+      "expected": 8,
+      "found": 8,
+      "missing": [],
+      "recall": 1
+    },
+    "piiClassifier": {
+      "expected": 11,
+      "found": 11,
+      "missing": [],
+      "falsePositives": [],
+      "precision": 1,
+      "recall": 1
+    },
+    "logicalLinks": {
+      "expected": [
+        "mock_app.logical_user_notes.user_id"
+      ],
+      "found": [
+        "mock_app.logical_user_notes.user_id"
+      ],
+      "missing": [],
+      "recall": 1
+    },
+    "warnings": []
+  }
+}

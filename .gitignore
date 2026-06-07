@@ -10,3 +10,4 @@ dist
 .gemini
 graphify-out
 GEMINI.md
+.agents/

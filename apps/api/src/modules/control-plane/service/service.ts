@@ -387,34 +387,54 @@ export class ControlPlaneService {
       });
     }
 
-    const created = await this.repository.createJobAndQueueTask({
-      jobId,
-      taskId,
-      organizationId: effectiveOrganizationId,
-      clientId: client.id,
-      request: input,
-      payload: {
-        request_id: jobId,
-        subject_opaque_id: input.subject_opaque_id,
-        idempotency_key: input.idempotency_key,
-        trigger_source: input.trigger_source,
-        actor_opaque_id: input.actor_opaque_id,
-        legal_framework: input.legal_framework,
-        request_timestamp: input.request_timestamp,
-        tenant_id: input.tenant_id,
-        cooldown_days: input.cooldown_days,
-        shadow_mode: input.shadow_mode,
-        webhook_url: input.webhook_url,
-      },
-      now,
-    });
+    try {
+      const created = await this.repository.createJobAndQueueTask({
+        jobId,
+        taskId,
+        organizationId: effectiveOrganizationId,
+        clientId: client.id,
+        request: input,
+        payload: {
+          request_id: jobId,
+          subject_opaque_id: input.subject_opaque_id,
+          idempotency_key: input.idempotency_key,
+          trigger_source: input.trigger_source,
+          actor_opaque_id: input.actor_opaque_id,
+          legal_framework: input.legal_framework,
+          request_timestamp: input.request_timestamp,
+          tenant_id: input.tenant_id,
+          cooldown_days: input.cooldown_days,
+          shadow_mode: input.shadow_mode,
+          webhook_url: input.webhook_url,
+        },
+        now,
+      });
 
-    return {
-      request_id: created.job.id,
-      task_id: created.task.id,
-      accepted_at: created.job.created_at.toISOString(),
-      idempotent_replay: false as const,
-    };
+      return {
+        request_id: created.job.id,
+        task_id: created.task.id,
+        accepted_at: created.job.created_at.toISOString(),
+        idempotent_replay: false as const,
+      };
+    } catch (error) {
+      // Handle race condition: if another request inserted the same idempotency key between our check and insert
+      if (error && typeof error === "object" && "code" in error && error.code === "23505") {
+        const racedJob = await this.repository.getJobByIdempotencyKey(
+          input.idempotency_key,
+          effectiveOrganizationId
+        );
+        if (racedJob && isCreateRequestEquivalent(racedJob, input)) {
+          const existingTask = await this.repository.getTaskByJobId(racedJob.id, effectiveOrganizationId);
+          return {
+            request_id: racedJob.id,
+            task_id: existingTask?.id ?? null,
+            accepted_at: racedJob.created_at.toISOString(),
+            idempotent_replay: true as const,
+          };
+        }
+      }
+      throw error;
+    }
   }
 
   /**

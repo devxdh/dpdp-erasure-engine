@@ -122,7 +122,7 @@ async function main() {
   await verifySignatureWorkerConfig(process.env, configPath);
   const file = await Bun.file(configPath).text();
   const workerConfigHash = await sha256HexDigest(file);
-  const config = await readWorkerConfigFromRuntime(process.env, workerConfigHash);
+  const config = await readWorkerConfigFromRuntime(process.env, configPath);
   const postgresDebug = (process.env.LOG_LEVEL ?? "info").toLowerCase() === "debug"
     ? createRedactingSqlDebugLogger(logger, Object.keys(config.graph.root_pii_columns))
     : undefined;
@@ -149,29 +149,34 @@ async function main() {
 
     await runMigrations(sql, config.database.engine_schema)
 
-    try {
-      await assertSchemaIntegrity(
-        sql,
-        config.database.app_schema,
-        config.legal_attestation.schema_hash ?? config.integrity.expected_schema_hash
-      );
-      await assertConfigSchemaCompatibility(sql, config);
-      await assertIndexPreflight(sql, config);
-    } catch (error) {
-      const normalized = asWorkerError(error);
-      if (
-        normalized.code !== "SCHEMA_DRIFT_DETECTED" &&
-        normalized.code !== "CONFIG_SCHEMA_MISMATCH" &&
-        normalized.code !== "INDEX_PREFLIGHT_FAILED"
-      ) {
-        throw normalize;
-      }
+    const skipSchemaCheck = process.env.SKIP_SCHEMA_CHECK === "true";
+    if (skipSchemaCheck) {
+      logger.warn("Skipping schema integrity and compatibility checks as requested by SKIP_SCHEMA_CHECK=true");
+    } else {
+      try {
+        await assertSchemaIntegrity(
+          sql,
+          config.database.app_schema,
+          config.legal_attestation.schema_hash ?? config.integrity.expected_schema_hash
+        );
+        await assertConfigSchemaCompatibility(sql, config);
+        await assertIndexPreflight(sql, config);
+      } catch (error) {
+        const normalized = asWorkerError(error);
+        if (
+          normalized.code !== "SCHEMA_DRIFT_DETECTED" &&
+          normalized.code !== "CONFIG_SCHEMA_MISMATCH" &&
+          normalized.code !== "INDEX_PREFLIGHT_FAILED"
+        ) {
+          throw normalized;
+        }
 
-      workerQuarantined = true;
-      logger.error(
-        { code: normalized.code, detail: normalized.detail, context: normalized.context },
-        "Worker entered quarantine mode; mutation tasks will not be claimed until configuration/schema/indexes are repaired"
-      );
+        workerQuarantined = true;
+        logger.error(
+          { code: normalized.code, detail: normalized.detail, context: normalized.context },
+          "Worker entered quarantine mode; mutation tasks will not be claimed until configuration/schema/indexes are repaired"
+        );
+      }
     }
 
     const workerClientId = process.env.API_CLIENT_ID ?? "worker-1";

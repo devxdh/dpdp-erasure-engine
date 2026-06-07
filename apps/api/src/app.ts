@@ -165,7 +165,7 @@ export function createApp(options: CreateAppOptions) {
   app.notFound(handleNotFound);
 
   app.get("/health", (c) => c.json({ ok: true }, 200));
-  app.get("/ready", async (c) => {
+  app.all("/ready", async (c) => {
     try {
       await options.sql`SELECT 1`;
       return c.json({ ok: true }, 200);

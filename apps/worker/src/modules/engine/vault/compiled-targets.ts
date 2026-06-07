@@ -468,8 +468,29 @@ export async function mutateCompiledTargets(
       });
     }
     const rowKeyExpression = buildRowKeyExpression("t0", target.primaryKeyColumns);
+
+    console.log(`[Compiled Targets] Validating target columns for ${target.schema}.${target.table}...`);
+    const colCheck = await tx.unsafe(`SELECT * FROM ${quoteQualifiedIdentifier(target.schema, target.table)} LIMIT 0`);
+    console.log(`[Compiled Targets] Columns for ${target.schema}.${target.table}:`, (colCheck.columns ?? []).map((c) => c.name));
+    const existingCols = new Set((colCheck.columns ?? []).map((c) => c.name));
+    for (const column of mutationColumns) {
+      if (!existingCols.has(column)) {
+        console.warn(`[Compiled Targets] Target column "${column}" missing from ${target.schema}.${target.table}!`);
+        fail({
+          code: "COMPILED_DAG_COLUMN_MISSING",
+          title: "Target column missing from database schema",
+          detail: `Column "${column}" does not exist in target table "${target.schema}.${target.table}".`,
+          category: "database",
+          retryable: false,
+          fatal: false,
+        });
+      }
+    }
+    console.log(`[Compiled Targets] Target validation passed for ${target.schema}.${target.table}`);
+
     let affectedRows = 0;
 
+    console.log(`[Compiled Targets] Starting batch mutation loop for ${target.schema}.${target.table}`);
     while (true) {
       const selectColumns = mutationColumns.length > 0
         ? `, ${mutationColumns.map((column) => `t0.${quoteIdentifier(column)} AS ${quoteIdentifier(column)}`).join(", ")}`

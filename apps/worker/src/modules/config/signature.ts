@@ -22,7 +22,7 @@ export async function verifySignatureWorkerConfig(
     env: EnvType,
     configPath: string | URL
 ): Promise<void> {
-    const publicKeySpkiBase64 = readRuntimeSecret(
+    const publicKeySpkiBase64 = await readRuntimeSecret(
         env,
         "CONFIG_SIGNING_PUBLIC_KEY_SPKI_BASE64"
     );

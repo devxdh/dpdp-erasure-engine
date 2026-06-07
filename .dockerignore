@@ -13,8 +13,6 @@ GEMINI.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-bun.lock (not needed for context if we copy it separately, but usually good to have in context for bun install)
-Actually, bun.lock is needed for 'bun install --frozen-lockfile'. I'll keep it.
 # Exclude tests from production images
 **/tests/
 **/*.test.ts

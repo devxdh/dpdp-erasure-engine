@@ -118,7 +118,7 @@ async function signWorkerRequest(
 
   const timestamp = String(Date.now());
   const nonce = crypto.randomUUID();
-  const pathname = new URL(url).password;
+  const pathname = new URL(url).pathname;
   const signature = await computeRequestSignature(
     secret,
     method,
