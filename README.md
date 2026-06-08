@@ -1,5 +1,7 @@
 # DPDP Erasure Engine & Compliance Worker
 
+[![NPM Version](https://img.shields.io/npm/v/dpdp-erasure-cli.svg)](https://www.npmjs.com/package/dpdp-erasure-cli)
+[![NPM Downloads](https://img.shields.io/npm/dt/dpdp-erasure-cli.svg)](https://www.npmjs.com/package/dpdp-erasure-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Engine: Bun](https://img.shields.io/badge/Engine-Bun-%23f9f9f9?logo=bun&logoColor=black)](https://bun.sh)
 [![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)](https://www.typescriptlang.org)
