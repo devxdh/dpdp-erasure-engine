@@ -8,19 +8,19 @@ When a user requests their data to be deleted, the engine does not immediately e
 
 ```mermaid
 stateDiagram-v2
-    [*] --> SUBMITTED: User requests deletion
-    SUBMITTED --> PROCESSING: Worker picks up task
-    PROCESSING --> VAULTED: PII extracted & masked in Prod
+    [*] --> WAITING_COOLDOWN: User requests deletion
+    WAITING_COOLDOWN --> EXECUTING: Worker picks up task
+    EXECUTING --> VAULTED: PII extracted & masked in Prod
     VAULTED --> NOTICE_SENT: Notification sent to user
     NOTICE_SENT --> SHREDDED: Cool-down period ends, key destroyed
     SHREDDED --> [*]
     
-    PROCESSING --> FAILED: Worker crash / Schema mismatch
-    FAILED --> SUBMITTED: Automatic Retry
+    EXECUTING --> FAILED: Worker crash / Schema mismatch
+    FAILED --> WAITING_COOLDOWN: Automatic Retry
 ```
 
-1.  **`SUBMITTED`**: The API Control Plane registers the request. It sits in a queue waiting for a Worker node.
-2.  **`PROCESSING`**: A Worker claims a "lease" on the task. It begins extracting data from production databases according to the PII Manifest.
+1.  **`WAITING_COOLDOWN`**: The API Control Plane registers the request. It sits in a queue waiting for a Worker node.
+2.  **`EXECUTING`**: A Worker claims a "lease" on the task. It begins extracting data from production databases according to the PII Manifest.
 3.  **`VAULTED`**: 
     - The original PII is encrypted with a unique, per-user cryptographic key.
     - The encrypted blob is stored in the highly-secure Vault Database.

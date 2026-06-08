@@ -27,11 +27,12 @@ If you have an internal "Privacy Dashboard" built into your app, you simply need
   "idempotency_key": "req-998877",        // Unique UUID to prevent double-processing
   "trigger_source": "USER_DASHBOARD",
   "legal_framework": "DPDP_2023",
-  "cooldown_days": 30                     // Days to vault before permanent shredding
+  "cooldown_days": 30,                    // Days to vault before permanent shredding
+  "webhook_url": "https://your-app.com/callback" // Optional: dynamically route outbound success/failure webhooks for this specific request
 }
 ```
 
-*Note:* You should authenticate this request using the `Authorization: Bearer <ADMIN_SECRET>` header.
+*Note:* You must authenticate this request using the `Authorization: Bearer <API_KEY>` header. For details on generating this key, see the [Deployment and Configuration Reference](./deployment-and-configuration-reference.md).
 
 ---
 
@@ -47,9 +48,13 @@ OneTrust provides a Privacy Rights Automation (DSAR) module. When a user submits
 
 **Step-by-Step Setup:**
 1.  **In OneTrust:** Go to Integration > Workflows. Create a new "Webhooks" trigger.
-2.  **Configure Inbound Request:** Set the target URL to your Erasure Engine's public-facing URL (e.g., `https://erasure.yourcompany.com/api/v1/erasure-requests`).
-3.  **Map the Payload:** Map the OneTrust `Subject ID` to the engine's `subject_opaque_id`.
-4.  **Configure Outbound Webhook:** You must tell the Erasure Engine to notify OneTrust when the job finishes. Add a webhook URL to your environment variables (`MAILER_WEBHOOK_URL` or a dedicated OneTrust webhook receiver) so the Engine can resolve the DSAR ticket in OneTrust automatically.
+2.  **Configure Inbound Request:** Set the target URL to your Erasure Engine's GRC endpoint (e.g., `https://erasure.yourcompany.com/api/v1/integrations/onetrust/webhooks`).
+3.  **Map the Payload:** Map the OneTrust `Subject ID` to the engine's `external_subject_id`.
+4.  **Security Headers (Required):** The Control Plane will strictly reject unsigned GRC webhooks. You must configure OneTrust to sign the request.
+    *   Set header `Authorization: Bearer <YOUR_API_KEY>`
+    *   Set header `x-grc-timestamp: <CURRENT_TIMESTAMP_MS>`
+    *   Set header `x-grc-signature: <HMAC_SHA256_HEX>` (computed using your API Key as the secret, signing the string `${timestamp}\n${rawBody}`).
+5.  **Configure Outbound Webhook:** You must tell the Erasure Engine to notify OneTrust when the job finishes. Pass the dynamic `webhook_url` in the payload so the Engine can automatically resolve the DSAR ticket in OneTrust.
 
 ### 3.2 Integrating with Zendesk
 

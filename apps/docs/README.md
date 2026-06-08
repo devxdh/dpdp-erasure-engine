@@ -14,6 +14,8 @@ This section covers what the Erasure Engine does, how it manages production data
     *   *How to integrate:* A direct guide for developers on how to connect the engine's API to internal dashboards, or third-party platforms like Zendesk, OneTrust, and Jira via webhooks.
 *   **[Operator CLI Reference Guide](./cli-operator-reference.md)**
     *   *How to operate:* A command reference for data engineers using the CLI to introspect databases, manage manifests, and manually trigger requests.
+*   **[Deployment and Configuration Reference](./deployment-and-configuration-reference.md)**
+    *   *How to deploy:* The production deployment guide, featuring a full environment variables reference, API key bootstrapping explanation, and step-by-step instructions for KMS providers (AWS, GCP, Vault).
 
 ## Part 2: Deep Dive & Internal Mechanics (For Contributors)
 
@@ -23,3 +25,4 @@ This section provides a technical deep dive into the system's setup, internal al
     *   *Internal Setup:* Learn how the heuristic engine automatically scans your database schemas, generates PII Manifests, and uses strict Schema Hashing to prevent dangerous configuration drift.
 *   **[Cryptography and Audit Verification](./cryptography-and-audit-verification.md)**
     *   *Mechanics:* A deep dive into the cryptographic shredding process (AES-256 vaulting). Explains why keyed HMAC hashing is critical for production masking and how Merkle Trees provide mathematical proof to auditors that data was deleted.
+
