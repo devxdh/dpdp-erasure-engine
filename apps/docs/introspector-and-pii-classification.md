@@ -1,6 +1,6 @@
 # Introspector and PII Classification
 
-Before the Erasure Engine can delete Personally Identifiable Information (PII), it has to know exactly where that PII lives. In a modern architecture with hundreds of tables and thousands of columns, manually mapping this out is impossible.
+Before the Erasure Engine can delete Personally Identifiable Information (PII), it has to know exactly where that PII lives. In a modern architecture with hundreds of tables and thousands of columns, manually mapping this out is extremely difficult and effort intensive.
 
 This is where the **Introspector** comes in.
 
