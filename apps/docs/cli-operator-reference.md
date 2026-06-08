@@ -13,7 +13,7 @@ If you are running the project locally or via Docker, the CLI is available via t
 npm run cli -- <command>
 ```
 
-For global installation (if published):
+For global installation (by devxdhanadiya):
 ```bash
 npm install -g dpdp-erasure-cli
 ```
