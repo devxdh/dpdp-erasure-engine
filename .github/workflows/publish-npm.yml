@@ -41,6 +41,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
@@ -54,3 +55,5 @@ jobs:
       - name: Publish Package
         working-directory: ./apps/worker
         run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
