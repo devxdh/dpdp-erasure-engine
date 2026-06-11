@@ -9,6 +9,9 @@ jobs:
   publish-npm:
     name: Publish to NPM
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for NPM Provenance & OIDC authentication
     
     steps:
       - name: Checkout Code
@@ -36,6 +39,6 @@ jobs:
 
       - name: Publish Package
         working-directory: ./apps/worker
-        run: npm publish --access public
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
