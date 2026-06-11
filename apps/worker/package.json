@@ -1,6 +1,18 @@
 {
   "name": "dpdp-erasure-cli",
-  "version": "1.0.1",
+  "version": "1.0.3",
+  "license": "Apache-2.0",
+  "keywords": [
+    "dpdp",
+    "dpdp-2023",
+    "data-privacy",
+    "data-erasure",
+    "privacy-compliance",
+    "cryptographic-shredding",
+    "gdpr",
+    "compliance",
+    "cli"
+  ],
   "module": "index.ts",
   "type": "module",
   "bin": {
