@@ -76,4 +76,4 @@ When the Introspector runs, it calculates a cryptographic hash of the *entire da
 
 When a Worker node attempts to execute an erasure task, it first recalculates the live database schema hash. **If the live hash does not match the Manifest hash, the Worker aborts the task immediately.** 
 
-This is a fail-closed mechanism. It prevents the engine from deleting data based on an outdated map, ensuring that newly added PII columns are never accidentally ignored during an erasure request. When this happens, the Operator CLI will alert you that you need to re-run the Introspector and update the Manifest.
+This is a fail-closed mechanism. It prevents the engine from deleting data based on an outdated map, helping ensure that newly added PII columns are not accidentally ignored during an erasure request. When this happens, the Operator CLI will alert you that you need to re-run the Introspector and update the Manifest.

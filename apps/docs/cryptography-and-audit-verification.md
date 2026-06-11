@@ -12,7 +12,7 @@ We solve this using **Cryptographic Shredding**, a **WORM Hash Chain Ledger**, a
 
 ## Cryptographic Shredding (The Vault)
 
-Instead of relying on database-level deletes, the Engine encrypts the data to mathematically guarantee it cannot be read.
+Instead of relying on database-level deletes, the Engine encrypts the data to cryptographically ensure it cannot be read.
 
 ### The Process:
 1.  **Key Generation**: When a deletion request is initiated, the Engine generates a unique, highly secure Data Encryption Key (DEK) specifically for that single user using AES-256-GCM.

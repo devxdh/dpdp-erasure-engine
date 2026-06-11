@@ -24,5 +24,5 @@ This section provides a technical deep dive into the system's setup, internal al
 *   **[Introspector and PII Classification](./introspector-and-pii-classification.md)**
     *   *Internal Setup:* Learn how the heuristic engine automatically scans your database schemas, generates PII Manifests, and uses strict Schema Hashing to prevent dangerous configuration drift.
 *   **[Cryptography and Audit Verification](./cryptography-and-audit-verification.md)**
-    *   *Mechanics:* A deep dive into the cryptographic shredding process (AES-256 vaulting). Explains why keyed HMAC hashing is critical for production masking and how Merkle Trees provide mathematical proof to auditors that data was deleted.
+    *   *Mechanics:* A deep dive into the cryptographic shredding process (AES-256 vaulting). Explains why keyed HMAC hashing is used for production masking and how Merkle Trees provide cryptographic evidence to auditors that data was rendered inaccessible.
 

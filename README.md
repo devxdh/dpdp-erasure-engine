@@ -5,7 +5,7 @@
 [![Engine: Bun](https://img.shields.io/badge/Engine-Bun-%23f9f9f9?logo=bun&logoColor=black)](https://bun.sh)
 [![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)](https://www.typescriptlang.org)
 
-An enterprise-grade, high-performance, and privacy-centric data erasure engine designed to automate compliance with modern privacy regulations such as the **Digital Personal Data Protection (DPDP) Act, 2023** (Section 12 - Obligations of Data Fiduciaries regarding erasure of personal data).
+A data erasure engine designed to facilitate workflows aligned with modern privacy regulations such as the **Digital Personal Data Protection (DPDP) Act, 2023** (Section 12 - Obligations of Data Fiduciaries regarding erasure of personal data).
 
 ---
 
@@ -19,7 +19,7 @@ Under Section 12 of the DPDP Act 2023, data fiduciaries must erase personal data
 - **Notice Cooldowns**: Users must receive a pre-erasure notification and a configurable cooldown window (e.g., 48 hours) to retract their request before the deletion becomes irreversible.
 
 ### How this Engine Solves it
-This engine splits the operational workload into a **Control Plane (API)** for orchestrating requests and a **Data Plane (Worker)** for executing migrations. It moves personal data from application tables into an isolated encrypted vault schema, replacing production fields with static masks or HMAC hashes. After the notice cooldown window expires, the encryption keys in the vault are destroyed (cryptographic shredding), rendering the data permanently and mathematically unrecoverable.
+This engine splits the operational workload into a **Control Plane (API)** for orchestrating requests and a **Data Plane (Worker)** for executing migrations. It moves personal data from application tables into an isolated encrypted vault schema, replacing production fields with static masks or HMAC hashes. After the notice cooldown window expires, the encryption keys in the vault are destroyed (cryptographic shredding), rendering the data permanently and cryptographically inaccessible.
 
 ---
 
@@ -50,11 +50,11 @@ curl http://localhost:13000/health
 
 ---
 
-## 3. Trust First: Evaluating with Shadow Mode
+## 3. Operational Pre-Checks: Shadow Mode
 
 Before allowing any third-party engine to mutate your production database, you can run all operations in **Shadow Mode** to verify execution safety:
 
-- **Zero Mutation Guarantee**: When submitting an erasure request with `"shadow_mode": true`, the worker executes the complete data extraction, vaulting, and database masking pipeline within an isolated database transaction.
+- **Zero Mutation Strategy**: When submitting an erasure request with `"shadow_mode": true`, the worker executes the complete data extraction, vaulting, and database masking pipeline within an isolated database transaction.
 - **Auto-Rollback**: Before committing, the worker triggers a `ShadowModeRollback` error. This forces PostgreSQL to **roll back all modifications**, leaving your target tables completely untouched.
 - **Validation**: The engine still returns the complete validation payload, allowing you to verify that PII classification and DAG execution succeeded without writing any mutations to disk.
 

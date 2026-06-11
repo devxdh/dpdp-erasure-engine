@@ -6,6 +6,16 @@ import { migrateApiSchema } from "./db";
 import { computeTokenHash, ControlPlaneRepository } from "./modules/control-plane";
 
 const env = await readApiEnv();
+
+// Explicit Programmatic Legal Warning printed to standard output on boot
+console.log("\n=======================================================================");
+console.log("[ENGINE INIT] Copyright 2026 Dev Dhanadiya. Licensed under Apache 2.0.");
+console.log("[ENGINE INIT] DESIGN PATTERN: ACID FAIL-CLOSED ORCHESTRATION ENGINE.");
+console.log("[WARN] System will freeze execution queues upon any database conflict.");
+console.log("[LEGAL] Under Apache 2.0 Sec 7 & 8, User assumes 100% liability for");
+console.log("        monitoring API failures, worker drops, and DPDP timelines.");
+console.log("=======================================================================\n");
+
 const sql = postgres(env.DATABASE_URL, {
   max: 10,
   idle_timeout: 20,

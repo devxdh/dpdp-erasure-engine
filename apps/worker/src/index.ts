@@ -116,6 +116,24 @@ async function sendMailerWebhook(
 
 async function main() {
   registerProcessGuard(logger);
+  
+  // Explicit Programmatic Legal Warning printed to standard output on boot
+  console.log("\n=======================================================================");
+  console.log("[ENGINE INIT] Copyright 2026 Dev Dhanadiya. Licensed under Apache 2.0.");
+  console.log("[ENGINE INIT] DESIGN PATTERN: ACID FAIL-CLOSED ORCHESTRATION ENGINE.");
+  console.log("[WARN] System will freeze execution queues upon any database conflict.");
+  console.log("[LEGAL] Under Apache 2.0 Sec 7 & 8, User assumes 100% liability for");
+  console.log("        monitoring API failures, worker drops, and DPDP timelines.");
+  console.log("=======================================================================\n");
+
+  if (process.env.I_ACCEPT_APACHE2_AND_DPDP_OPERATIONAL_LIABILITY !== "true") {
+    console.error("[CRITICAL ERROR] Engine initialization aborted.");
+    console.error("[CRITICAL ERROR] You must explicitly set 'I_ACCEPT_APACHE2_AND_DPDP_OPERATIONAL_LIABILITY=true'");
+    console.error("                 in your environment variables to acknowledge the Apache 2.0 disclaimer");
+    console.error("                 and assume full operational risk under the Indian DPDP Act 2023.");
+    process.exit(1);
+  }
+
   logger.info("Starting Compliance Worker");
 
   const configPath = new URL("../compliance.worker.yaml", import.meta.url)

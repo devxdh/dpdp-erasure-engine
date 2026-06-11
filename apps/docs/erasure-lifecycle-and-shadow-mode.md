@@ -27,13 +27,13 @@ stateDiagram-v2
     - The production database is updated: the original PII is replaced with anonymized placeholders (`HMAC`, `NULL`, or `STATIC_MASK`).
     - *Why vault instead of delete?* To allow for a "cool-down" or grace period. If the request was malicious or accidental, the data can still be restored.
 4.  **`NOTICE_SENT`**: The system triggers a webhook to your email service provider, alerting the user that their data is queued for permanent deletion.
-5.  **`SHREDDED`**: Once the legal grace period expires (e.g., 30 days), the unique cryptographic key used to encrypt the vaulted data is securely destroyed. Without this key, the vaulted blob is mathematically impossible to decrypt. **The data is permanently gone.**
+5.  **`SHREDDED`**: Once the legal grace period expires (e.g., 30 days), the unique cryptographic key used to encrypt the vaulted data is securely destroyed. Without this key, the vaulted blob becomes cryptographically inaccessible. **The data is effectively destroyed.**
 
 ## Building Trust: Shadow Mode
 
-The number one reason companies hesitate to implement automated erasure is fear. Running an automated script that modifies production databases is terrifying. "What if it deletes the wrong thing? What if it breaks a foreign key and brings down the whole app?"
+The number one reason companies hesitate to implement automated erasure is fear. Running an automated script that modifies production databases carries significant risk. "What if it deletes the wrong thing? What if it breaks a foreign key and brings down the whole app?"
 
-We built **Shadow Mode** specifically to solve this fear.
+We built **Shadow Mode** to mitigate this operational risk.
 
 ### Shadow Mode Execution Flow
 
@@ -57,8 +57,8 @@ The report includes:
 ### Benefits of Shadow Mode
 
 *   **Zero-Risk Testing**: You can test your PII configuration against real, live production data without any risk of data loss.
-*   **Validation**: When you write a new schema mapping, you run it in Shadow Mode to verify that it works perfectly before deploying it to production.
-*   **Auditor Proof**: Shadow Mode reports can be exported to show auditors that your erasure configuration is actively catching the correct data fields.
+*   **Validation**: When you write a new schema mapping, you run it in Shadow Mode to verify that it functions as expected before deploying it to production.
+*   **Audit Evidence**: Shadow Mode reports can be exported to show auditors that your erasure configuration is actively catching the correct data fields.
 
 ### Enabling Shadow Mode
 
@@ -72,4 +72,4 @@ Shadow Mode can be triggered on a per-request basis via the API, or globally con
 }
 ```
 
-Because of Shadow Mode, developers never have to guess what the engine will do. They can see the exact outcome before flipping the switch to "Live."
+Shadow Mode allows developers to preview the engine's behavior against live data before committing real mutations.

@@ -55,6 +55,9 @@ const envSchema = z.object({
   ARCHIVE_S3_ACCESS_KEY_ID: z.string().min(1).optional(),
   ARCHIVE_S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
   ARCHIVE_INTERVAL_MS: z.coerce.number().int().positive().default(3600000),
+  I_ACCEPT_APACHE2_AND_DPDP_OPERATIONAL_LIABILITY: booleanEnv.refine((val) => val === true, {
+    message: "You must explicitly set I_ACCEPT_APACHE2_AND_DPDP_OPERATIONAL_LIABILITY=true in your environment variables to acknowledge the Apache 2.0 disclaimer and shift of operational risk."
+  }),
 }).superRefine((value, ctx) => {
   if (value.ARCHIVE_S3_ENABLED) {
     for (const key of [

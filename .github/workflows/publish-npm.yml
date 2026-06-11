@@ -1,0 +1,41 @@
+name: Publish CLI to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions UI
+
+jobs:
+  publish-npm:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js (for NPM Publish)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Tests (Worker)
+        run: bun run --cwd ./apps/worker test
+
+      - name: Run Typecheck (Worker)
+        run: bun run --cwd ./apps/worker typecheck
+
+      - name: Publish Package
+        working-directory: ./apps/worker
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

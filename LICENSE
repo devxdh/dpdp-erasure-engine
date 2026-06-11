@@ -173,6 +173,31 @@
       incurred by, or claims asserted against, such Contributor by reason
       of your accepting any such warranty or additional liability.
 
+   ===========================================================================
+   NOTICE: EXPLICIT COMPLIANCE LIMITATION AND OPERATIONAL SHIFT OF RISK
+   ===========================================================================
+   Copyright 2026 Dev Dhanadiya
+
+   This software is an orchestration tool designed to process schema updates, 
+   database masking, and crypto-shredding keys based entirely on configurations 
+   defined and verified by the User. 
+
+   The descriptive marketing phrase "DPDP-Compliant Erasure Engine" identifies 
+   the structural capability of the engine to assist the User in building 
+   erasure pipelines. It does NOT constitute a legal warranty, legal advice, 
+   or automated regulatory compliance under the Digital Personal Data 
+   Protection (DPDP) Act, 2023 of India.
+
+   Consistent with Section 7 and Section 8 of the Apache License, Version 2.0:
+   1. The User acts as the "Data Fiduciary" and bears 100% responsibility for 
+      verifying database foreign key integrity, schema mapping, and retention rules.
+   2. A database lockup, transaction rollback, or queue freeze resulting from 
+      the engine's "fail-closed" ACID design is a known system behavior 
+      to preserve data integrity. It shall NOT be construed as "gross negligence" 
+      or a "deliberate act" under Section 8. 
+   3. The User is solely responsible for implementing active operational hooks 
+      and monitoring frozen queues to meet statutory legal timelines.
+
    END OF TERMS AND CONDITIONS
 
    APPENDIX: How to apply the Apache License to your work.
