@@ -1,6 +1,6 @@
 {
   "name": "dpdp-erasure-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "license": "Apache-2.0",
   "keywords": [
     "dpdp",
@@ -17,6 +17,10 @@
   "type": "module",
   "bin": {
     "dpdp-cli": "./src/modules/cli/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devxdh/dpdp-erasure-engine.git"
   },
   "publishConfig": {
     "access": "public"
