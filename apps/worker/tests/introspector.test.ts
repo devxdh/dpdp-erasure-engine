@@ -201,6 +201,7 @@ describe("Offline Introspector", () => {
     expect(users?.piiColumns.map((column) => column.column).sort()).toEqual([
       "card_number",
       "email",
+      "full_name",
       "gstin",
       "phone",
       "upi_id",
@@ -215,7 +216,6 @@ describe("Offline Introspector", () => {
     expect(yaml).toContain(`root_table: ${schema}.users`);
     expect(yaml).toContain(`table: ${schema}.profiles`);
     expect(yaml).toContain("pii_columns: [pan, aadhaar_payload, nested_payload]");
-    expect(yaml).not.toContain("full_name");
     expect(yaml).toContain("schema_hash:");
     expect(yaml).toContain("generated_by: compliance-introspector-v1");
     expect(yaml).toContain("legal_disclaimer:");

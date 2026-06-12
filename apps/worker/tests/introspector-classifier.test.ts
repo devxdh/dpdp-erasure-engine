@@ -53,10 +53,10 @@ describe("Introspector PII classifier", () => {
     expect(classifyLeaf("560001", "postal_code")).toContain("indian_pin_code");
   });
 
-  it("does not infer personal names without a dedicated NER model", () => {
-    expect(metadataScore("full_name")).toBe(0);
-    expect(metadataScore("first_name")).toBe(0);
-    expect(metadataScore("customer_name")).toBe(0);
+  it("infers personal names based on standard developer metadata patterns", () => {
+    expect(metadataScore("full_name")).toBe(0.92);
+    expect(metadataScore("first_name")).toBe(0.92);
+    expect(metadataScore("customer_name")).toBe(0.82);
     expect(classifyLeaf("Priya Sharma")).toEqual([]);
   });
 });
