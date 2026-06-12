@@ -4,7 +4,7 @@ Welcome to the DPDP Erasure Engine architecture guide. This document provides a 
 
 ## Project Purpose and Context
 
-In the modern regulatory landscape (GDPR, CCPA, India's DPDP Act), companies are legally required to delete user data upon request. However, "deleting" data in a complex, microservice-based architecture is incredibly difficult:
+In the modern regulatory landscape (e.g. India's DPDP Act), companies are legally required to delete user data upon request. However, "deleting" data in a complex, microservice-based architecture is incredibly difficult:
 
 1.  **Data Sprawl**: User data isn't in one place. It is spread across primary databases, analytical replicas, caches, and third-party SaaS tools.
 2.  **Referential Integrity**: Simply deleting a user record might break foreign key constraints, orphan associated data (like orders or invoices), and crash production applications.

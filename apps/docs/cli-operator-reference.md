@@ -4,7 +4,7 @@
 
 **The DPDP Erasure Engine CLI** is an automated, AI-assisted privacy toolkit that helps you securely discover, map, and cryptographically shred PII (Personally Identifiable Information) in your database. 
 
-It acts as the control plane for the [DPDP Erasure Engine](https://github.com/devxdh/dpdp-erasure-engine), allowing Data Protection Officers (DPOs) and Software Engineers to effortlessly comply with global privacy laws (DPDP, GDPR, CCPA) without writing manual SQL deletion scripts.
+It acts as the control plane for the [DPDP Erasure Engine](https://github.com/devxdh/dpdp-erasure-engine), allowing Data Protection Officers (DPOs) and Software Engineers to effortlessly build workflows aligned with global privacy laws (DPDP) without writing manual SQL deletion scripts.
 
 ---
 
