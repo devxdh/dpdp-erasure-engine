@@ -1,0 +1,370 @@
+{
+  "summary": {
+    "rootTable": "public.users",
+    "generatedAt": "2026-06-12T05:19:07.235Z",
+    "schemaHash": "ea9e816d30fcee6bd4f322f1fb769e853c2e7ee5b19263aaa54f5ef80189212c",
+    "targetCount": 15,
+    "tablesWithPii": 8,
+    "piiColumnCount": 9,
+    "highConfidenceCount": 6,
+    "reviewRequiredCount": 3,
+    "potentialLogicalLinkCount": 20
+  },
+  "findings": [
+    {
+      "table": "public.legacy_crm_notes",
+      "column": "agent_notes",
+      "dataType": "text",
+      "confidence": 0.95,
+      "metadataScore": 0,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "email",
+        "indian_mobile"
+      ]
+    },
+    {
+      "table": "public.marketing_campaign_clicks",
+      "column": "target_email",
+      "dataType": "character varying",
+      "confidence": 0.95,
+      "metadataScore": 0.92,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "email"
+      ]
+    },
+    {
+      "table": "public.users",
+      "column": "email",
+      "dataType": "character varying",
+      "confidence": 0.95,
+      "metadataScore": 0.92,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "email"
+      ]
+    },
+    {
+      "table": "public.users",
+      "column": "phone_number",
+      "dataType": "character varying",
+      "confidence": 0.92,
+      "metadataScore": 0.92,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "indian_mobile"
+      ]
+    },
+    {
+      "table": "public.support_tickets",
+      "column": "description",
+      "dataType": "text",
+      "confidence": 0.9,
+      "metadataScore": 0,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "indian_mobile"
+      ]
+    },
+    {
+      "table": "public.ticket_messages",
+      "column": "message_body",
+      "dataType": "text",
+      "confidence": 0.9,
+      "metadataScore": 0,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "indian_mobile"
+      ]
+    },
+    {
+      "table": "public.audit_logs",
+      "column": "ip_address",
+      "dataType": "inet",
+      "confidence": 0.82,
+      "metadataScore": 0.82,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "ipv4"
+      ]
+    },
+    {
+      "table": "public.user_devices",
+      "column": "last_ip_address",
+      "dataType": "inet",
+      "confidence": 0.82,
+      "metadataScore": 0.82,
+      "contentMatchRatio": 0,
+      "sampleSize": 0,
+      "matchedSignatures": []
+    },
+    {
+      "table": "public.user_addresses",
+      "column": "pincode",
+      "dataType": "character varying",
+      "confidence": 0.78,
+      "metadataScore": 0.62,
+      "contentMatchRatio": 1,
+      "sampleSize": 50,
+      "matchedSignatures": [
+        "indian_pin_code"
+      ]
+    }
+  ],
+  "potentialLogicalLinks": [
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "users"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "abandoned_carts"
+      },
+      "column": "customer_id",
+      "reason": "Table exposes customer_id which conceptually maps to the root entity."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "users"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "audit_logs"
+      },
+      "column": "actor_id",
+      "reason": "Table exposes actor_id which conceptually maps to the root entity."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "kyc_documents"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "orders"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "kyc_documents"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "support_tickets"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "kyc_documents"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_addresses"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "kyc_documents"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_devices"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "kyc_documents"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_preferences"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "orders"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "support_tickets"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "orders"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_addresses"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "orders"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_devices"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "orders"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_preferences"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "support_tickets"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_addresses"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "support_tickets"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_devices"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "support_tickets"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_preferences"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "user_addresses"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_devices"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "user_addresses"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_preferences"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "user_devices"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "user_preferences"
+      },
+      "column": "user_id",
+      "reason": "Both tables expose user_id but no physical foreign key was found."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "users"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "legacy_crm_notes"
+      },
+      "column": "client_id",
+      "reason": "Table exposes client_id which conceptually maps to the root entity."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "users"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "marketing_campaign_clicks"
+      },
+      "column": "target_email",
+      "reason": "Table exposes target_email which conceptually maps to the root entity."
+    },
+    {
+      "sourceTable": {
+        "schema": "public",
+        "table": "users"
+      },
+      "targetTable": {
+        "schema": "public",
+        "table": "third_party_telemetry"
+      },
+      "column": "user_uuid",
+      "reason": "Table exposes user_uuid which conceptually maps to the root entity."
+    }
+  ],
+  "nextSteps": [
+    "Review every PII column and potential logical link with the application owner.",
+    "Copy reviewed targets into compliance.worker.yml and complete legal_attestation.",
+    "Run compliance-worker check-integrity before allowing live worker boot.",
+    "Sign the reviewed manifest with compliance-worker sign after DPO approval."
+  ]
+}

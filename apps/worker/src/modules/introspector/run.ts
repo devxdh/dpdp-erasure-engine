@@ -38,14 +38,6 @@ export async function runIntrospector(options: RunIntrospectorOptions): Promise<
     maxDepth,
   });
 
-  const classifiedColumns = await classifyDagTargets({
-    sql: options.sql,
-    targets: dag,
-    samplePercent: options.samplePercent,
-    sampleLimit: options.sampleLimit,
-    threshold: options.threshold,
-  });
-
   const [schemaHash, potentialLogicalLinks] = await Promise.all([
     detectSchemaDrift(options.sql, root.schema),
     discoverPotentialLogicalLinks(
@@ -58,7 +50,49 @@ export async function runIntrospector(options: RunIntrospectorOptions): Promise<
     ),
   ]);
 
-  const targets: IntrospectorTargetDraft[] = dag.map((target) => ({
+  const dagTableKeys = new Set(dag.map((t) => targetKey(t.table.schema, t.table.table)));
+  const logicalTargets: typeof dag = [];
+
+  for (const link of potentialLogicalLinks) {
+    const sourceKey = targetKey(link.sourceTable.schema, link.sourceTable.table);
+    const targetKeyStr = targetKey(link.targetTable.schema, link.targetTable.table);
+
+    if (dagTableKeys.has(sourceKey) && !dagTableKeys.has(targetKeyStr)) {
+      dagTableKeys.add(targetKeyStr);
+      logicalTargets.push({
+        table: link.targetTable,
+        parentTable: link.sourceTable,
+        constraintName: null,
+        childColumns: [link.column],
+        parentColumns: [link.column],
+        depth: maxDepth,
+        fkCondition: `LOGICAL_LINK (${link.column})`,
+      });
+    } else if (dagTableKeys.has(targetKeyStr) && !dagTableKeys.has(sourceKey)) {
+      dagTableKeys.add(sourceKey);
+      logicalTargets.push({
+        table: link.sourceTable,
+        parentTable: link.targetTable,
+        constraintName: null,
+        childColumns: [link.column],
+        parentColumns: [link.column],
+        depth: maxDepth,
+        fkCondition: `LOGICAL_LINK (${link.column})`,
+      });
+    }
+  }
+
+  const fullTargets = [...dag, ...logicalTargets];
+
+  const classifiedColumns = await classifyDagTargets({
+    sql: options.sql,
+    targets: fullTargets,
+    samplePercent: options.samplePercent,
+    sampleLimit: options.sampleLimit,
+    threshold: options.threshold,
+  });
+
+  const targets: IntrospectorTargetDraft[] = fullTargets.map((target) => ({
     table: target.table,
     parentTable: target.parentTable,
     fkCondition: target.fkCondition,

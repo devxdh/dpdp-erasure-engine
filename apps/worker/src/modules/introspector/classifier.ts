@@ -137,6 +137,7 @@ const METADATA_PATTERNS: Array<{ pattern: RegExp; score: number }> = [
   { pattern: /(^|_)(driving_license|driving_licence|license_number|licence_number|dl_number|dl_no)($|_)/i, score: MEDIUM_METADATA_SCORE },
   { pattern: /(^|_)(address|street|postal_code|zip_code|pin_code|pincode)($|_)/i, score: WEAK_METADATA_SCORE },
   { pattern: /(^|_)(device_fingerprint|device_id|advertising_id|gaid|idfa)($|_)/i, score: WEAK_METADATA_SCORE },
+  { pattern: /(^|_)(document_number|identity_number|id_number)($|_)/i, score: WEAK_METADATA_SCORE },
 ];
 
 function qualifiedKey(table: QualifiedTable): string {
@@ -336,12 +337,23 @@ function classifyLeafDetailed(value: string, columnName: string = ""): ContentSi
   const bytes = textEncoder.encode(value.trim());
   try {
     const normalized = textDecoder.decode(bytes).trim();
-    return CONTENT_SIGNATURES
-      .filter((signature) =>
-        signatureHasMetadataSupport(signature, columnName) &&
-        signature.pattern.test(normalized) &&
-        (!signature.validate || signature.validate(normalized))
-      );
+    // Split into tokens and strip leading/trailing punctuation so regexes can match substrings
+    const tokens = normalized.split(/\s+/).map((t) => t.replace(/^[^\w\+]+|[^\w]+$/g, ""));
+    const candidates = Array.from(new Set([normalized, ...tokens])).filter((t) => t.length > 0);
+
+    const matches = new Set<ContentSignature>();
+    for (const candidate of candidates) {
+      for (const signature of CONTENT_SIGNATURES) {
+        if (
+          signatureHasMetadataSupport(signature, columnName) &&
+          signature.pattern.test(candidate) &&
+          (!signature.validate || signature.validate(candidate))
+        ) {
+          matches.add(signature);
+        }
+      }
+    }
+    return Array.from(matches);
   } finally {
     bytes.fill(0);
   }

@@ -236,7 +236,7 @@ export async function discoverPotentialLogicalLinks(
   const byColumn = new Map<string, QualifiedTable[]>();
   for (const row of rows) {
     const normalized = row.column_name.toLowerCase();
-    if (!/^(?:user_id|account_id|customer_id|member_id|subject_id|.*_user_id)$/.test(normalized)) {
+    if (!/^(?:user_id|account_id|customer_id|client_id|actor_id|user_uuid|member_id|subject_id|.*_user_id|target_email|user_email)$/.test(normalized)) {
       continue;
     }
 
@@ -247,7 +247,25 @@ export async function discoverPotentialLogicalLinks(
 
   const links: PotentialLogicalLink[] = [];
   const emitted = new Set<string>();
+
   for (const [column, tables] of byColumn.entries()) {
+    for (const table of tables) {
+      // Explicitly link any orphan table that has an identity-like column to the root table
+      if (table.schema === root.schema && table.table === root.table) {
+        continue;
+      }
+      const key = physicalLinkKey(root, table, column);
+      if (!physicalLinks.has(key) && !emitted.has(key)) {
+        emitted.add(key);
+        links.push({
+          sourceTable: root,
+          targetTable: table,
+          column,
+          reason: `Table exposes ${column} which conceptually maps to the root entity.`,
+        });
+      }
+    }
+    
     if (tables.length < 2) {
       continue;
     }
