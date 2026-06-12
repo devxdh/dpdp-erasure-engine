@@ -18,7 +18,7 @@ The Control Plane API enforces token-based authorization for all administrative 
 Once the bootstrap key is active, you can use it to provision separate organizations (tenants) and scoped API keys:
 
 * **Create a New Organization:**
-  ```bash
+  ```text
   curl -X POST http://localhost:3000/api/v1/admin/organizations \
     -H "Authorization: Bearer your-super-secret-bootstrap-token" \
     -H "Content-Type: application/json" \
@@ -42,7 +42,7 @@ Once the bootstrap key is active, you can use it to provision separate organizat
 
 * **Create a Scoped Key:**
   To limit access for specific service integrations, create a scoped key under an organization's context:
-  ```bash
+  ```text
   curl -X POST http://localhost:3000/api/v1/org/api-keys \
     -H "Authorization: Bearer avk_c5f9b..." \
     -H "Content-Type: application/json" \

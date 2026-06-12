@@ -37,7 +37,7 @@ While our Introspector is incredibly powerful at analyzing metadata, foreign key
 
 This CLI relies on [Bun](https://bun.sh/) for native cryptographic bindings and high-performance execution.
 
-```bash
+```text
 npm install -g dpdp-erasure-cli
 ```
 
@@ -47,7 +47,7 @@ npm install -g dpdp-erasure-cli
 
 Don't want to memorize commands? Just run the CLI with no arguments to launch the interactive wizard:
 
-```bash
+```text
 dpdp-cli
 ```
 
@@ -60,7 +60,7 @@ Setting up your database for privacy compliance follows this simple 5-step workf
 ### 1. Introspect Your Database
 Safely analyze your schema to discover PII and draft the deletion manifest. The AI will even find logical links if you don't use strict Foreign Keys!
 
-```bash
+```text
 dpdp-cli introspect \
   --url "postgres://user:pass@localhost:5432/app_db" \
   --root public.users \
@@ -73,19 +73,19 @@ Open the generated `compliance.worker.yml`. Review the `targets` and `join` cond
 
 ### 3. Generate Security Keys
 Create a private/public keypair to securely sign your manifest for production environments.
-```bash
+```text
 dpdp-cli keygen
 ```
 
 ### 4. Cryptographically Sign the Manifest
 Lock down the rules to prevent unauthorized changes in your CI/CD pipeline.
-```bash
+```text
 dpdp-cli sign --config ./compliance.worker.yml --key ./worker.pkcs8.key
 ```
 
 ### 5. Simulate an Erasure (Dry-Run)
 Test the erasure on a specific user. This command runs entirely within an isolated transaction that is automatically rolled back, so it is 100% safe.
-```bash
+```text
 dpdp-cli dry-run --id "user_12345" --url "postgres://user:pass@localhost:5432/app_db" --config ./compliance.worker.yml
 ```
 
@@ -95,7 +95,7 @@ dpdp-cli dry-run --id "user_12345" --url "postgres://user:pass@localhost:5432/ap
 
 You can use the CLI in your GitHub Actions or GitLab CI to fail builds if a developer modifies the database schema without updating the signed compliance manifest:
 
-```bash
+```text
 dpdp-cli check-integrity --url "postgres://..." --config ./compliance.worker.yml
 ```
 

@@ -84,7 +84,7 @@ For highly sensitive environments, you might want an engineering manager to manu
 
 To receive updates from the Erasure Engine (such as when the cool-down period ends and data is shredded), configure the webhook environment variables when booting the container:
 
-```bash
+```text
 docker run -e MAILER_WEBHOOK_URL=https://your-app.com/webhooks/erasure-status ...
 ```
 

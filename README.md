@@ -32,7 +32,7 @@ This standalone container runs an isolated PostgreSQL instance, pre-seeds a mock
 ### 1. Start the Demo Container
 Run the following command:
 
-```bash
+```text
 docker run -d \
   -p 13000:3000 \
   -p 19464:9464 \
@@ -43,7 +43,7 @@ docker run -d \
 ### 2. Verify all Components are Healthy
 Wait a few seconds, then query the Control Plane API:
 
-```bash
+```text
 curl http://localhost:13000/health
 # Expected Output: {"ok":true}
 ```
@@ -61,7 +61,7 @@ Before allowing any third-party engine to mutate your production database, you c
 ### Trigger a Shadow Mode Request
 Submit a POST request to the API:
 
-```bash
+```text
 curl -X POST http://localhost:13000/api/v1/erasure-requests \
   -H "Authorization: Bearer admin-secret" \
   -H "Content-Type: application/json" \
@@ -86,7 +86,7 @@ To deploy the engine in production against your actual application database, use
 ### Step 1: Introspect & Design Manifest
 Run the introspection container against your database to detect PII and output a draft manifest configuration file:
 
-```bash
+```text
 docker run --rm \
   -v $(pwd):/app \
   devxdh/dpdp-erasure-engine-worker:latest \
@@ -106,7 +106,7 @@ Open `compliance.worker.yml` and review the columns. Specify which erasure metho
 ### Step 3: Generate Keypair & Sign Configuration
 To prevent unauthorized modification of your compliance rules, you must cryptographically sign your configuration manifest:
 
-```bash
+```text
 # Generate key pair
 docker run --rm -v $(pwd):/app --entrypoint /usr/local/bin/bun devxdh/dpdp-erasure-engine-worker:latest run apps/worker/src/modules/cli/index.ts keygen
 
@@ -122,7 +122,7 @@ docker run --rm \
 ### Step 4: Run API and Worker Containers
 Start the Control Plane and Data Plane services. Mount the signed manifest file into the Worker container:
 
-```bash
+```text
 # Start API Service
 docker run -d -p 13000:3000 \
   -e DATABASE_URL=postgres://user:pass@your-db-host:5432/dpdp_control \
