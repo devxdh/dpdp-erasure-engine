@@ -180,5 +180,3 @@ if (rawArgs.length === 0) {
 } else {
   program.parse(process.argv);
 }
-
-program.parse();
