@@ -8,6 +8,8 @@ This section covers what the Erasure Engine does, how it manages production data
 
 *   **[Architecture and Overview](./overview-and-architecture.md)**
     *   *What it does:* Explains the core problem (Data Sprawl, Referential Integrity) and how the engine solves it via a decentralized Vault & Masking architecture. Covers fail-closed logic and the conflict between Data Retention and Data Erasure.
+*   **[DPDPA Engineering Compliance Rule Book](./dpdpa-engineering-rulebook.md)**
+    *   *The Legal Baseline:* The definitive engineering checklist breaking down exactly how the engine complies with India's DPDPA 2023, the 2025 Rules, and overriding statutory retention laws.
 *   **[Erasure Lifecycle and Shadow Mode](./erasure-lifecycle-and-shadow-mode.md)**
     *   *How it handles data:* Details the strict state machine for PII (Vaulted -> Shredded). It deeply explores **Shadow Mode**, explaining how you can simulate erasures safely against live databases inside isolated, automatically rolled-back transactions.
 *   **[Integration and Help Guide](./integration-and-help-guide.md)**
