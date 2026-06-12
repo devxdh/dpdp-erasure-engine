@@ -69,3 +69,15 @@ Our **DPDP Erasure Engine** is specifically designed to enforce and solve the fo
 * [x] **Zero-Knowledge API:** The Control Plane orchestrates requests but operates with zero access to the actual database or encryption keys, which remain isolated inside the Data Plane (Worker).
 * [x] **State Machine for Retention Locks:** The engine features an explicit state machine (`WAITING_COOLDOWN`, `EXECUTING`, `VAULTED`, `SHREDDED`) to handle cooldown periods and retention locks, rejecting unauthorized processing while preserving data if necessary.
 * [x] **Audit Ledgers:** The Control Plane API securely tracks every cryptographic receipt and state transition into a WORM (Write-Once-Read-Many) compliant ledger to prove execution to auditors.
+
+---
+
+## Part 4: What the Engine DOES NOT Solve (Shared Responsibility Model)
+
+To maintain absolute transparency, deploying this engine **does not instantly make your entire company DPDP compliant.** This engine solves the backend database and cryptography problems. The following responsibilities remain with your application developers and legal operations team:
+
+*   **[Out of Scope] Notice & Consent Lifecycle:** The engine does not build frontend UI popups or manage user opt-ins. Your frontend application must capture granular consent and integrate with Consent Managers.
+*   **[Out of Scope] Breach Notification (72-hour SLA):** If your infrastructure is compromised, the engine does not detect the intrusion or automatically report to the DPBI. Your security operations center (SOC) must handle incident response.
+*   **[Out of Scope] The 3-Year Inactivity Trigger:** The engine provides the API (`POST /erasure-requests`) to securely execute an erasure, but your application backend must implement the `cron` job that queries for inactive users and calls our API.
+*   **[Out of Scope] Children's Data Processing:** The engine assumes data sent to it was legally acquired. Your application layer must enforce age verification mechanisms and parental consent blocks.
+*   **[Out of Scope] Log Sanitization:** While the engine redacts PII from its own audit ledgers, your application must independently sanitize its own stdout traffic logs to prevent creating a shadow database of plaintext PII.
