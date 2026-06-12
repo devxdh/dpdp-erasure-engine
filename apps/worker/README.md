@@ -1,6 +1,6 @@
 # dpdp-erasure-cli
 
-[![npm version](https://badge.fury.io/js/dpdp-erasure-cli.svg)](https://badge.fury.io/js/dpdp-erasure-cli)
+[![npm version](https://img.shields.io/npm/v/dpdp-erasure-cli?color=14b8a6&style=flat-square)](https://www.npmjs.com/package/dpdp-erasure-cli)
 
 **The DPDP Erasure Engine CLI** is an automated, AI-assisted privacy toolkit that helps you securely discover, map, and cryptographically shred PII (Personally Identifiable Information) in your database. 
 
@@ -17,6 +17,19 @@ Manually deleting a user across dozens of microservice tables is dangerous and p
 3. **Drafting a Manifest:** Automatically generates a `compliance.worker.yml` erasure plan that handles HMAC redaction vs. hard deletion.
 4. **Cryptographic Signatures:** Locks the manifest using Ed25519 signatures so production deletion rules cannot be silently altered.
 5. **Dry-Run Simulations:** Tests the erasure locally in a rolled-back PostgreSQL transaction to prove it works before you deploy.
+
+---
+
+## ⚠️ Introspector Limitations (100% Transparency)
+
+While our Introspector is incredibly powerful at analyzing metadata, foreign keys, and block-sampling text to find common identifiers (like Emails, Phone Numbers, Aadhaar, PAN, SSN, Credit Cards), it is fundamentally a regex and heuristic engine—not a sentient AI. 
+
+**What we CANNOT do:**
+1. **Generic Column Names:** If your production database has a column named `info` or `data` and it happens to contain a user's *First Name* or *Last Name* embedded inside a generic string, our engine cannot confidently flag it as PII. We can only guess "Name" PII if the column is named descriptively (e.g., `full_name`, `first_name`, `last_name`).
+2. **Passwords, Tokens, and Secrets:** We cannot differentiate a random SHA-256 password hash or an API token from an ordinary ID string unless the column has a clear name like `password`, `secret`, `token`, or `api_key`.
+3. **Roles and Permissions:** Similarly, we cannot guess if an integer or string denotes an administrative permission unless the column gives us a hint (like `role_id` or `access_level`).
+
+**The Solution:** The Introspector is designed to do 95% of the heavy lifting. **The remaining 5% requires a human DPO or Developer.** You must always review the generated `compliance.worker.yml` and manually add any deeply hidden sensitive columns before deploying.
 
 ---
 

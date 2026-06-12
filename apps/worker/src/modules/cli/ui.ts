@@ -10,18 +10,18 @@ import boxen from "boxen";
 export const UI = {
   header: (title: string) => {
     console.log(
-      boxen(pc.bold(pc.blue(`COMPLIANCE WORKER — ${title.toUpperCase()}`)), {
+      boxen(pc.bold(pc.cyan(`COMPLIANCE WORKER — ${title.toUpperCase()}`)), {
         padding: { top: 0, bottom: 0, left: 2, right: 2 },
         margin: { top: 1, bottom: 1 },
         borderStyle: "round",
-        borderColor: "blue",
+        borderColor: "cyan",
       })
     );
   },
 
   divider: () => console.log(pc.gray("─".repeat(process.stdout.columns || 60))),
 
-  spinner: (text: string): Ora => ora({ text, color: "blue" }).start(),
+  spinner: (text: string): Ora => ora({ text, color: "cyan" }).start(),
 
   success: (msg: string) => console.log(`\n${pc.green("✔")} ${pc.bold(msg)}`),
   error: (msg: string) => console.error(`\n${pc.red("✖")} ${pc.bold(msg)}`),

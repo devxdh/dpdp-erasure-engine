@@ -1,7 +1,7 @@
 {
   "summary": {
     "rootTable": "public.users",
-    "generatedAt": "2026-06-12T05:19:07.235Z",
+    "generatedAt": "2026-06-12T08:15:53.497Z",
     "schemaHash": "ea9e816d30fcee6bd4f322f1fb769e853c2e7ee5b19263aaa54f5ef80189212c",
     "targetCount": 15,
     "tablesWithPii": 8,

@@ -3,7 +3,7 @@
 ## Summary
 
 - Root table: `public.users`
-- Generated at: `2026-06-12T05:19:07.235Z`
+- Generated at: `2026-06-12T08:15:53.497Z`
 - Schema hash: `ea9e816d30fcee6bd4f322f1fb769e853c2e7ee5b19263aaa54f5ef80189212c`
 - DAG targets: 15
 - Tables with PII: 8

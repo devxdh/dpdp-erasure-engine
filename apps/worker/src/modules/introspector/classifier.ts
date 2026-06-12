@@ -121,6 +121,10 @@ const CONTENT_SIGNATURES: ContentSignature[] = [
 ];
 
 const METADATA_PATTERNS: Array<{ pattern: RegExp; score: number }> = [
+  { pattern: /(^|_)(full_name|first_name|last_name|middle_name|surname|given_name|display_name)($|_)/i, score: STRONG_METADATA_SCORE },
+  { pattern: /(^|_)name($|_)/i, score: MEDIUM_METADATA_SCORE },
+  { pattern: /(^|_)(password|passwd|pwd|secret|token|api_key|access_token|refresh_token|auth_token|hash|salt)($|_)/i, score: STRONG_METADATA_SCORE },
+  { pattern: /(^|_)(role|roles|permission|permissions|group|groups|acl|access_level)($|_)/i, score: WEAK_METADATA_SCORE },
   { pattern: /(^|_)(email|e_mail|email_address|mail_address|contact_email)($|_)/i, score: STRONG_METADATA_SCORE },
   { pattern: /(^|_)(phone|mobile|msisdn|telephone|contact_number|whatsapp)(_number|_no)?($|_)/i, score: STRONG_METADATA_SCORE },
   { pattern: /(^|_)(aadhaar|aadhar|uidai)(_number|_no|_id)?($|_)/i, score: STRONG_METADATA_SCORE },

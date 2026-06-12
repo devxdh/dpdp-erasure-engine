@@ -3,7 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/dpdp-erasure-cli.svg)](https://www.npmjs.com/package/dpdp-erasure-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Engine: Bun](https://img.shields.io/badge/Engine-Bun-%23f9f9f9?logo=bun&logoColor=black)](https://bun.sh)
-[![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)](https://www.typescriptlang.org)
+[![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-14b8a6)](https://www.typescriptlang.org)
 
 A data erasure engine designed to facilitate workflows aligned with modern privacy regulations such as the **Digital Personal Data Protection (DPDP) Act, 2023** (Section 12 - Obligations of Data Fiduciaries regarding erasure of personal data).
 
@@ -141,13 +141,17 @@ docker run -d \
 
 ---
 
-## 5. Introspector Limitations & Manual Oversight
+## 5. ⚠️ Introspector Limitations & Manual Oversight (100% Transparency)
 
-Automated database scanning is a starting point, not a guarantee. Professional deployment **must** include human review:
+Automated database scanning is a starting point, not a magic bullet. While our Introspector is incredibly powerful at analyzing metadata and block-sampling text to find common identifiers (like Emails, Aadhaar, Credit Cards), it is fundamentally a heuristic engine. 
 
-- **Implicit Logical Links**: The introspector compiles the table relationship graph based on database foreign key constraints. If your application joins tables in-code without database-level constraints, the introspector will not detect them. You must review the `potentialLogicalLinks` output and manually add them as `satellite_targets` in `compliance.worker.yml`.
-- **Dynamic JSON/Document Fields**: PII nested inside JSON or text log columns can be missed if they do not match sample thresholds. Ensure these columns are manually specified.
-- **DPO Manifest Verification**: A Data Protection Officer (DPO) must audit the generated `compliance.worker.yml` to confirm that all required PII fields are mapped and that legal holds are correctly declared before signing.
+Professional deployment **must** include human review. **Here is exactly what we CANNOT do automatically:**
+
+1. **Generic Column Names:** If your database has a column named `info` or `data` and it happens to contain a user's *First Name* or *Last Name* embedded inside a string, our engine cannot confidently flag it as PII. We can only guess "Name" PII if the column is named descriptively (e.g., `full_name`, `first_name`, `last_name`).
+2. **Passwords, Tokens, and Secrets:** We cannot differentiate a random SHA-256 password hash or an API token from an ordinary ID string unless the column has a clear name like `password`, `secret`, `token`, or `api_key`.
+3. **Roles and Permissions:** Similarly, we cannot guess if an integer or string denotes an administrative permission unless the column gives us a hint (like `role_id` or `access_level`).
+4. **Implicit Logical Links:** The introspector compiles the table relationship graph based on database foreign key constraints. If your application joins tables in-code without database-level constraints, you must review the `potentialLogicalLinks` output and manually verify them.
+5. **DPO Manifest Verification:** A Data Protection Officer (DPO) must audit the generated `compliance.worker.yml` to confirm that all required PII fields are mapped, and that the chosen erasure actions (`HMAC`, `STATIC_MASK`, `NULL`) comply with local law before signing.
 
 ---
 
