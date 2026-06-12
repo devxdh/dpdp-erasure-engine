@@ -57,16 +57,24 @@ export async function runIntrospector(options: RunIntrospectorOptions): Promise<
     const sourceKey = targetKey(link.sourceTable.schema, link.sourceTable.table);
     const targetKeyStr = targetKey(link.targetTable.schema, link.targetTable.table);
 
+    let parentCol = link.column;
+    let childCol = link.column;
+    
+    // Attempt intelligent primary key mapping for orphaned root links
+    if (link.sourceTable.schema === root.schema && link.sourceTable.table === root.table) {
+      parentCol = ["target_email", "user_email", "email_address"].includes(link.column) ? "email" : "id";
+    }
+
     if (dagTableKeys.has(sourceKey) && !dagTableKeys.has(targetKeyStr)) {
       dagTableKeys.add(targetKeyStr);
       logicalTargets.push({
         table: link.targetTable,
         parentTable: link.sourceTable,
         constraintName: null,
-        childColumns: [link.column],
-        parentColumns: [link.column],
+        childColumns: [childCol],
+        parentColumns: [parentCol],
         depth: maxDepth,
-        fkCondition: `LOGICAL_LINK (${link.column})`,
+        fkCondition: `${formatQualifiedTable(link.sourceTable)}.${parentCol} = ${formatQualifiedTable(link.targetTable)}.${childCol}`,
       });
     } else if (dagTableKeys.has(targetKeyStr) && !dagTableKeys.has(sourceKey)) {
       dagTableKeys.add(sourceKey);
@@ -74,10 +82,10 @@ export async function runIntrospector(options: RunIntrospectorOptions): Promise<
         table: link.sourceTable,
         parentTable: link.targetTable,
         constraintName: null,
-        childColumns: [link.column],
-        parentColumns: [link.column],
+        childColumns: [childCol],
+        parentColumns: [parentCol],
         depth: maxDepth,
-        fkCondition: `LOGICAL_LINK (${link.column})`,
+        fkCondition: `${formatQualifiedTable(link.targetTable)}.${parentCol} = ${formatQualifiedTable(link.sourceTable)}.${childCol}`,
       });
     }
   }

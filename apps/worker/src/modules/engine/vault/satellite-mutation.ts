@@ -52,9 +52,9 @@ async function hardDeleteSatelliteRows(
 
   while (true) {
     const tenantFilter = tenantId ? tx` AND tenant_id = ${tenantId}` : tx``;
-    const deletedRows = await tx<{ id: string | number }[]>`
+    const deletedRows = await tx<{ ctid: string }[]>`
       WITH batch AS (
-        SELECT id
+        SELECT ctid
         FROM ${tx(appSchema)}.${tx(tableName)}
         WHERE ${tx(lookupColumn)} = ${lookupValue}
         ${tenantFilter}
@@ -62,8 +62,8 @@ async function hardDeleteSatelliteRows(
         FOR UPDATE SKIP LOCKED
       )
       DELETE FROM ${tx(appSchema)}.${tx(tableName)}
-      WHERE id IN (SELECT id FROM batch)
-      RETURNING id
+      WHERE ctid IN (SELECT ctid FROM batch)
+      RETURNING ctid
     `;
 
     if (deletedRows.length === 0) {

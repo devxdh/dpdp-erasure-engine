@@ -3,7 +3,7 @@ import type { Tsql } from "@/types";
 import { assertIdentifier } from "@/utils";
 
 interface SatelliteRowId {
-  id: number;
+  ctid: string;
 }
 
 async function yieldWorkerEventLoop(): Promise<void> {
@@ -78,7 +78,7 @@ export async function redactSatelliteTable(
     const tenantFilter = tenantId ? tx` AND tenant_id = ${tenantId}` : tx``;
     const updatedRows = await tx<SatelliteRowId[]>`
       WITH batch AS (
-        SELECT id
+        SELECT ctid
         FROM ${tx(schema)}.${tx(table)}
         WHERE ${tx(safeLookupColumn)} = ${lookupValue}
         ${tenantFilter}
@@ -87,8 +87,8 @@ export async function redactSatelliteTable(
       )
       UPDATE ${tx(schema)}.${tx(table)}
       SET ${tx(safeLookupColumn)} = ${newHmacValue}
-      WHERE id IN (SELECT id FROM batch)
-      RETURNING id
+      WHERE ctid IN (SELECT ctid FROM batch)
+      RETURNING ctid
     `;
 
     if (updatedRows.length === 0) {
